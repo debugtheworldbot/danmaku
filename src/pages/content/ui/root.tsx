@@ -3,6 +3,8 @@ import App from '@pages/content/ui/app';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import injectedStyle from './injected.css?inline';
 
+import { attachTwindStyle } from '@src/shared/style/twind';
+
 refreshOnUpdate('pages/content');
 
 const root = document.createElement('div');
@@ -21,6 +23,7 @@ const styleElement = document.createElement('style');
 styleElement.innerHTML = injectedStyle;
 shadowRoot.appendChild(styleElement);
 
+attachTwindStyle(rootIntoShadow, shadowRoot);
 /**
  * https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/pull/174
  *

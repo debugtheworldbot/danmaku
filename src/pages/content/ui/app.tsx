@@ -10,7 +10,10 @@ const host = 'https://danmaku-backend.vercel.app';
 export default function App() {
   const d = useRef(null);
   const loadRemote = async () => {
-    const res = await fetch(`${host}/youtube/api?id=5SrNE7BPxOs`, {
+    const search = window.location.search;
+    if (!search) throw new Error('No search');
+    const id = window.location.search.replace('?v=', '');
+    const res = await fetch(`${host}/youtube/api?id=${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -20,13 +23,17 @@ export default function App() {
     return res.data as YT_Response;
   };
   const init = useCallback(async () => {
-    const video = document.getElementsByTagName('video')[0];
-    if (!video) return console.log('no video');
     const list = await loadRemote();
+    const video = document.getElementsByTagName('video')[0];
+    console.log('init video', video);
+    if (!video)
+      return setTimeout(() => {
+        init();
+      }, 1000);
 
     const container = video.parentNode as HTMLElement;
     container.style.height = '100%';
-    console.log('content view loaded', video);
+    console.log('damnaku loaded', video);
     const comments = list.map(l => ({ ...l, style }));
     const danmaku = new Danmaku({
       // 必填。用于显示弹幕的「舞台」会被添加到该容器中。
@@ -60,6 +67,8 @@ export default function App() {
   useEffect(() => {
     init();
   }, [init]);
+
+  return null;
   return (
     <div className="fixed top-0 right-0 h-20 z-[9999] bg-gray-200/20 flex text-xl gap-4">
       <button className="px-4 py-2 rounded-full" onClick={emit}>

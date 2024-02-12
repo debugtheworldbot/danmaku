@@ -15,7 +15,7 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'sidePanel'],
+  permissions: ['storage', 'sidePanel', 'tabs'],
   side_panel: {
     default_path: 'src/pages/sidepanel/index.html',
   },
@@ -33,12 +33,8 @@ const manifest = {
   },
   content_scripts: [
     {
-      matches: ['https://danmaku.js.org/*', 'https://www.youtube.com/*'],
-      js: ['src/pages/contentInjected/index.js'],
-    },
-    {
-      matches: ['https://danmaku.js.org/*', 'https://www.youtube.com/*'],
-      js: ['src/pages/contentUI/index.js'],
+      matches: ['https://danmaku.js.org/*', 'https://www.youtube.com/*', 'https://*/*'],
+      js: ['src/pages/contentUi/index.js'],
     },
   ],
   devtools_page: 'src/pages/devtools/index.html',

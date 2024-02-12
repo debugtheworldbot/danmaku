@@ -1,5 +1,5 @@
 import Danmaku from 'danmaku';
-import { useEffect, useRef, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 
 export type YT_Response = {
   time: number;
@@ -8,12 +8,24 @@ export type YT_Response = {
 
 const host = 'https://danmaku-backend.vercel.app';
 export default function App() {
+  chrome.runtime.onMessage.addListener(function (message) {
+    const id = message.id;
+    if (currentId.current === id) return;
+    currentId.current = id;
+
+    console.log('new video id:', id);
+    init(id);
+  });
   const d = useRef(null);
-  const loadRemote = async () => {
-    const search = window.location.search;
-    if (!search) throw new Error('No search');
-    const id = window.location.search.replace('?v=', '');
-    const res = await fetch(`${host}/youtube/api?id=${id}`, {
+  const currentId = useRef(null);
+  const loadRemote = async (id?: string) => {
+    let finalId = id;
+    if (!id) {
+      const search = window.location.search;
+      if (!search) throw new Error('No search');
+      finalId = window.location.search.replace('?v=', '');
+    }
+    const res = await fetch(`${host}/youtube/api?id=${finalId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -22,13 +34,14 @@ export default function App() {
     console.log('rrrrr', res);
     return res.data as YT_Response;
   };
-  const init = useCallback(async () => {
-    const list = await loadRemote();
+  const init = useCallback(async (id?: string) => {
+    d.current && d.current.destroy();
+    const list = await loadRemote(id);
     const video = document.getElementsByTagName('video')[0];
     console.log('init video', video);
     if (!video)
       return setTimeout(() => {
-        init();
+        init(id);
       }, 1000);
 
     const container = video.parentNode as HTMLElement;
@@ -64,9 +77,6 @@ export default function App() {
     };
     d.current.emit(comment);
   };
-  useEffect(() => {
-    init();
-  }, [init]);
 
   return null;
   return (

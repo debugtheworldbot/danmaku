@@ -15,6 +15,8 @@ const Popup = () => {
     const queryOptions = { active: true, currentWindow: true };
     const [tab] = await chrome.tabs.query(queryOptions);
     console.log(tab.url);
+    const isYoutube = tab.url.includes('https://www.youtube.com/watch?');
+    if (!isYoutube) return '';
     const id = tab.url.replace('https://www.youtube.com/watch?v=', '');
     setId(id);
     return id;
@@ -22,6 +24,7 @@ const Popup = () => {
 
   const getList = useCallback(async () => {
     const id = await getCurrentTab();
+    if (!id) return;
     const res = await fetch(`${host}/youtube/api?id=${id}`, {
       method: 'GET',
       headers: {
@@ -42,22 +45,26 @@ const Popup = () => {
       style={{
         backgroundColor: theme === 'light' ? '#fff' : '#000',
       }}>
-      <main>
-        <p>video id: {id}</p>
-        <button className="border rounded px-2 cursor-pointer text-lg" onClick={getList}>
-          update
-        </button>
-        <div>total count: {list?.length}</div>
-        <ul>
-          {list?.map((comment, index) => (
-            <li key={index}>
-              <div>time:{comment.time}s</div>
-              <div>{comment.text}</div>
-              ----
-            </li>
-          ))}
-        </ul>
-      </main>
+      {id ? (
+        <main>
+          <p>video id: {id}</p>
+          <button className="border rounded px-2 cursor-pointer text-lg" onClick={getList}>
+            update
+          </button>
+          <div>total count: {list?.length}</div>
+          <ul>
+            {list?.map((comment, index) => (
+              <li key={index}>
+                <div>time:{comment.time}s</div>
+                <div>{comment.text}</div>
+                ----
+              </li>
+            ))}
+          </ul>
+        </main>
+      ) : (
+        <main className="text-2xl font-medium">not a youtube video</main>
+      )}
     </div>
   );
 };

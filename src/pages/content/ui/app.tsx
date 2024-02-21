@@ -1,3 +1,4 @@
+import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { useEffect, useRef, useCallback } from 'react';
 
@@ -40,7 +41,13 @@ export default function App() {
     const container = video.parentNode as HTMLElement;
     container.style.height = '100%';
     console.log('damnaku loaded', video);
-    const comments = list.map(l => ({ ...l, style }));
+    const comments = list.map(l => ({
+      ...l,
+      style: {
+        ...style,
+        color: pickRandomColor(),
+      },
+    }));
     const danmaku = new Danmaku({
       // 必填。用于显示弹幕的「舞台」会被添加到该容器中。
       container,
@@ -93,7 +100,6 @@ export default function App() {
   );
 }
 const style = {
-  color: 'white',
   fontWeight: 'bold',
   fontSize: '25px',
   textShadow: '-1px -1px #000, -1px 1px #000, 1px -1px #000, 1px 1px #000',

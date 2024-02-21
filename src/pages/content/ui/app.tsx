@@ -1,23 +1,16 @@
 import Danmaku from 'danmaku';
-import { useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 export type YT_Response = {
   time: number;
   text: string;
 }[];
 
-const host = 'https://danmaku-backend.vercel.app';
+export const host = 'https://danmaku-backend.vercel.app';
 export default function App() {
-  chrome.runtime.onMessage.addListener(function (message) {
-    const id = message.id;
-    if (currentId.current === id) return;
-    currentId.current = id;
-
-    console.log('new video id:', id);
-    init(id);
-  });
   const d = useRef(null);
   const currentId = useRef(null);
+
   const loadRemote = async (id?: string) => {
     let finalId = id;
     if (!id) {
@@ -77,6 +70,18 @@ export default function App() {
     };
     d.current.emit(comment);
   };
+
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener(function (message) {
+      const id = message.id;
+      if (!id) return;
+      if (currentId.current === id) return;
+      currentId.current = id;
+
+      console.log('new video id:', id);
+      init(id);
+    });
+  }, [init]);
 
   return null;
   return (

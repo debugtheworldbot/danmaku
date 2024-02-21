@@ -1,13 +1,40 @@
-import React from 'react';
-import logo from '@assets/img/logo.svg';
 import '@pages/popup/Popup.css';
 import useStorage from '@src/shared/hooks/useStorage';
 import exampleThemeStorage from '@src/shared/storages/exampleThemeStorage';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
+import { useState, useEffect, useCallback } from 'react';
+import { host } from '../content/ui/app';
 
 const Popup = () => {
   const theme = useStorage(exampleThemeStorage);
+  const [id, setId] = useState('');
+  const [list, setList] = useState([]);
+
+  async function getCurrentTab() {
+    const queryOptions = { active: true, currentWindow: true };
+    const [tab] = await chrome.tabs.query(queryOptions);
+    console.log(tab.url);
+    const id = tab.url.replace('https://www.youtube.com/watch?v=', '');
+    setId(id);
+    return id;
+  }
+
+  const getList = useCallback(async () => {
+    const id = await getCurrentTab();
+    const res = await fetch(`${host}/youtube/api?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(res => res.json());
+    console.log('rrrrr', res);
+    setList(res.data);
+  }, []);
+
+  useEffect(() => {
+    getList();
+  }, [getList]);
 
   return (
     <div
@@ -15,28 +42,22 @@ const Popup = () => {
       style={{
         backgroundColor: theme === 'light' ? '#fff' : '#000',
       }}>
-      <header className="App-header" style={{ color: theme === 'light' ? '#000' : '#fff' }}>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.ssss
-        </p>
-        <a
-          className="App-link bg-black"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: theme === 'light' && '#0281dc', marginBottom: '10px' }}>
-          Learn React!
-        </a>
-        <button
-          style={{
-            backgroundColor: theme === 'light' ? '#fff' : '#000',
-            color: theme === 'light' ? '#000' : '#fff',
-          }}
-          onClick={exampleThemeStorage.toggle}>
-          Toggle theme
+      <main>
+        <p>video id: {id}</p>
+        <button className="border rounded px-2 cursor-pointer text-lg" onClick={getList}>
+          update
         </button>
-      </header>
+        <div>total count: {list?.length}</div>
+        <ul>
+          {list?.map((comment, index) => (
+            <li key={index}>
+              <div>time:{comment.time}s</div>
+              <div>{comment.text}</div>
+              ----
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 };

@@ -1,11 +1,7 @@
+import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { useEffect, useRef, useCallback } from 'react';
-
-export type YT_Response = {
-  time: number;
-  text: string;
-}[];
 
 export const host = 'https://danmaku-backend.vercel.app';
 export default function App() {
@@ -26,6 +22,7 @@ export default function App() {
       },
     }).then(res => res.json());
     console.log('rrrrr', res);
+    danmakuStorage.set(res.data);
     return res.data as YT_Response;
   };
   const init = useCallback(async (id?: string) => {

@@ -3,12 +3,14 @@ import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
 import { useState, useEffect, useCallback } from 'react';
 import { host } from '../content/ui/app';
 import useStorage from '@root/src/shared/hooks/useStorage';
-import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
+import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
+import configStorage from '@root/src/shared/storages/configStorage';
 
 const Popup = () => {
   const danmakus = useStorage(danmakuStorage);
+  const config = useStorage(configStorage);
   const [id, setId] = useState('');
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<YT_Response>([]);
   const [loading, setLoading] = useState(false);
 
   const getCurrentTab = useCallback(async () => {
@@ -50,6 +52,9 @@ const Popup = () => {
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
     <div className="text-center">
+      <button onClick={() => configStorage.toggle(!config.enabled)} className="text-2xl font-medium">
+        Danmaku: {config.enabled ? 'on' : 'off'}
+      </button>
       {id ? (
         <main className="pl-4 pb-4 pr-1">
           <button onClick={updateList} className="text-lg font-medium text-left">
@@ -59,7 +64,7 @@ const Popup = () => {
           <ol className="list-disc text-base">
             {list?.map((comment, index) => (
               <li className="text-left" key={index}>
-                <span className="text-blue-600 mr-2">{comment.time}</span>
+                <span className="text-blue-600 mr-2">{comment?.time}</span>
                 {comment.text}
               </li>
             ))}

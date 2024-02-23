@@ -2,6 +2,8 @@ import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { useEffect, useRef, useCallback } from 'react';
 import { checkIsLive, getLiveChats, getComments } from './requests';
+import configStorage from '@root/src/shared/storages/configStorage';
+import useStorage from '@root/src/shared/hooks/useStorage';
 
 interface Comment {
   text?: string;
@@ -28,6 +30,7 @@ let timer: NodeJS.Timeout;
 export default function App() {
   const d = useRef(null);
   const currentId = useRef(null);
+  const config = useStorage(configStorage);
 
   const emitLiveComments = useCallback(async (channelId: string, pageToken?: string) => {
     const { pollingIntervalMillis, items, nextPageToken } = await getLiveChats({ channelId, pageToken });
@@ -110,6 +113,17 @@ export default function App() {
     d.current.emit(comment);
   };
 
+  const init = useCallback(
+    async (id?: string) => {
+      console.log('new video id:', id);
+      timer && clearTimeout(timer);
+      const liveChannelId = await checkIsLive(id);
+      console.log('liveChannelId', liveChannelId);
+      if (liveChannelId) return initLiveChats(liveChannelId);
+      initComments(id);
+    },
+    [initComments, initLiveChats],
+  );
   useEffect(() => {
     chrome.runtime.onMessage.addListener(async function (message) {
       const id = message.id;
@@ -117,14 +131,19 @@ export default function App() {
       if (currentId.current === id) return;
       currentId.current = id;
 
-      console.log('new video id:', id);
-      timer && clearTimeout(timer);
-      const liveChannelId = await checkIsLive(id);
-      console.log('liveChannelId', liveChannelId);
-      if (liveChannelId) return initLiveChats(liveChannelId);
-      initComments(id);
+      await init(id);
     });
-  }, [initComments, initLiveChats]);
+  }, [init]);
+  useEffect(() => {
+    console.log('config update');
+    if (config.enabled) {
+      init();
+    } else {
+      console.log('destroy danmaku');
+      d.current?.destroy();
+      clearTimeout(timer);
+    }
+  }, [config, init]);
 
   return null;
   return (

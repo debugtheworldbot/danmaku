@@ -12,6 +12,7 @@ const Popup = () => {
   const [id, setId] = useState('');
   const [list, setList] = useState<YT_Response>([]);
   const [loading, setLoading] = useState(false);
+  const [turnOn, setTurnOn] = useState(false);
 
   const getCurrentTab = useCallback(async () => {
     const queryOptions = { active: true, currentWindow: true };
@@ -52,9 +53,17 @@ const Popup = () => {
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
     <div className="text-center">
-      <button onClick={() => configStorage.toggle(!config.enabled)} className="text-2xl font-medium">
+      <button
+        onClick={() => {
+          const res = !config.enabled;
+          setTurnOn(res);
+
+          configStorage.toggle(res);
+        }}
+        className="text-2xl font-medium">
         Danmaku: {config.enabled ? 'on' : 'off'}
       </button>
+      <div>{turnOn && 'refresh the page to take effect'}</div>
       {id ? (
         <main className="pl-4 pb-4 pr-1">
           <button onClick={updateList} className="text-lg font-medium text-left">

@@ -125,6 +125,9 @@ export default function App() {
     [initComments, initLiveChats],
   );
   useEffect(() => {
+    window.onresize = () => {
+      d.current && d.current.resize();
+    };
     chrome.runtime.onMessage.addListener(async function (message) {
       const id = message.id;
       if (!id) return;
@@ -136,9 +139,7 @@ export default function App() {
   }, [init]);
   useEffect(() => {
     console.log('config update');
-    if (config.enabled) {
-      init();
-    } else {
+    if (!config.enabled) {
       console.log('destroy danmaku');
       d.current?.destroy();
       clearTimeout(timer);

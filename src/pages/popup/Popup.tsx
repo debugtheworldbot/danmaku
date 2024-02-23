@@ -31,9 +31,6 @@ const Popup = () => {
     setLoading(true);
     const res = await fetch(`${host}/youtube/api?id=${id}`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
       .then(res => res.json())
       .catch(err => console.log('err', err));

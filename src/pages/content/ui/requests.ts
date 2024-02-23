@@ -44,6 +44,11 @@ export const getLiveChats = async ({ channelId, pageToken }: { channelId: string
       'Content-Type': 'application/json',
     },
   }).then(res => res.json());
+  if (pageToken) {
+    danmakuStorage.push(res.data.items);
+  } else {
+    danmakuStorage.clear();
+  }
   return res.data as YT_LIVE_RES;
 };
 

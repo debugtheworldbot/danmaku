@@ -22,7 +22,7 @@ interface Comment {
   render?(): HTMLElement | HTMLCanvasElement;
 }
 
-const isDev = true;
+const isDev = false;
 export const host = isDev ? 'http://localhost:3000' : 'https://danmaku-backend.vercel.app';
 let timer: NodeJS.Timeout;
 export default function App() {
@@ -103,9 +103,6 @@ export default function App() {
     d.current = danmaku;
   };
   const emit = async () => {
-    if (!d.current) {
-      await initComments();
-    }
     const comment = {
       text: 'bla blaaaaaaa',
       style,
@@ -129,7 +126,7 @@ export default function App() {
     });
   }, [initComments, initLiveChats]);
 
-  // return null;
+  return null;
   return (
     <div className="fixed top-0 right-0 h-20 z-[9999] bg-gray-200/20 flex text-xl gap-4">
       <button className="px-4 py-2 rounded-full" onClick={emit}>

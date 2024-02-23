@@ -15,9 +15,6 @@ export const getComments = async (id?: string) => {
   const finalId = getId(id);
   const res = await fetch(`${host}/youtube/api?id=${finalId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   }).then(res => res.json());
   console.log('rrrrr', res);
   danmakuStorage.set(res.data);
@@ -28,9 +25,6 @@ export const checkIsLive = async (id?: string) => {
   const finalId = getId(id);
   const res = await fetch(`${host}/youtube/checkLive?id=${finalId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   }).then(res => res.json());
   const channelId = res.channelId;
   return channelId;
@@ -40,9 +34,6 @@ export const getLiveChats = async ({ channelId, pageToken }: { channelId: string
   const pageTokenParam = pageToken ? `&pageToken=${pageToken}` : '';
   const res = await fetch(`${host}/youtube/live?channelId=${channelId}${pageTokenParam}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   }).then(res => res.json());
   if (pageToken) {
     danmakuStorage.push(res.data.items);

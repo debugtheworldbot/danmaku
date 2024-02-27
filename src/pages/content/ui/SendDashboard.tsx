@@ -1,24 +1,48 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 
 export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   const { onAdd } = props;
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
+  const focusing = useRef(false);
 
   const closePopup = useCallback(() => {
     setVisible(false);
+    focusing.current = false;
     setText('');
   }, []);
 
   useEffect(() => {
+    const focusin = () => {
+      console.log('listen focus');
+      if (visible) return;
+      focusing.current = true;
+    };
+    window.addEventListener('focusin', focusin);
+
+    const focusout = () => {
+      console.log('listen blur');
+      if (visible) return;
+      focusing.current = false;
+    };
+    window.addEventListener('focusout', focusout);
+
+    return () => {
+      window.removeEventListener('focusin', focusin);
+      window.removeEventListener('focusout', focusout);
+    };
+  }, [visible]);
+
+  useEffect(() => {
     const trackKey = (e: KeyboardEvent) => {
-      e.stopImmediatePropagation();
       if (e.key === 'Enter') {
+        if (focusing.current) return console.log('ffffffocusing');
         setVisible(true);
       }
       if (e.key === 'Escape') {
         closePopup();
       }
+      e.stopImmediatePropagation();
     };
     window.addEventListener('keydown', trackKey, true);
     return () => {

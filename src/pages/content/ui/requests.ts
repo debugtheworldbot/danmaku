@@ -12,10 +12,16 @@ const getId = (id?: string) => {
   return finalId;
 };
 
-export const getDBList = async (id: string) => {
-  return await fetch(`${host}/youtube/list/api?id=${id}`, {
-    method: 'GET',
-  }).then(res => res.json());
+export const addComments = async (id: string, text: string, time: number) => {
+  await fetch(`${host}/youtube/list/api`, {
+    method: 'POST',
+    body: JSON.stringify({
+      text,
+      videoId: id,
+      time,
+    }),
+  });
+  return getComments(id);
 };
 
 export const getComments = async (id?: string) => {
@@ -23,7 +29,7 @@ export const getComments = async (id?: string) => {
   const res = await fetch(`${host}/youtube/api?id=${finalId}`, {
     method: 'GET',
   }).then(res => res.json());
-  console.log('rrrrr', res);
+  console.log('danmakus', res.data);
   danmakuStorage.set(res.data);
   return res.data as YT_Response;
 };

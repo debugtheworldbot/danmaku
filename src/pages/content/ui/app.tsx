@@ -1,34 +1,17 @@
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
-import { useEffect, useRef, useCallback } from 'react';
-import { checkIsLive, getLiveChats, getComments } from './requests';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { checkIsLive, getLiveChats, getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
-
-interface Comment {
-  text?: string;
-  /**
-   * @default rtl
-   */
-  mode?: 'ltr' | 'rtl' | 'top' | 'bottom';
-  /**
-   * Specified in seconds. Not required in live mode.
-   * @default media?.currentTime
-   */
-  time?: number;
-  style?: Partial<CSSStyleDeclaration> | CanvasRenderingContext2D;
-  /**
-   * A custom render to draw comment.
-   * When it exist, `text` and `style` will be ignored.
-   */
-  render?(): HTMLElement | HTMLCanvasElement;
-}
+import { Add } from '../../popup/Popup';
 
 let timer: NodeJS.Timeout;
 export default function App() {
   const d = useRef(null);
   const currentId = useRef(null);
   const config = useStorage(configStorage);
+  const [videoId, setVideoId] = useState('');
 
   const emitLiveComments = useCallback(async (channelId: string, pageToken?: string) => {
     const { pollingIntervalMillis, items, nextPageToken } = await getLiveChats({ channelId, pageToken });
@@ -103,9 +86,9 @@ export default function App() {
     });
     d.current = danmaku;
   };
-  const emit = async () => {
+  const emit = async (text: string) => {
     const comment = {
-      text: 'bla blaaaaaaa',
+      text,
       style,
     };
     d.current.emit(comment);
@@ -131,6 +114,7 @@ export default function App() {
       if (!id) return;
       if (currentId.current === id) return;
       currentId.current = id;
+      setVideoId(id);
 
       await init(id);
     });
@@ -144,12 +128,17 @@ export default function App() {
     }
   }, [config, init]);
 
-  return null;
+  const addDanmaku = async (text: string) => {
+    emit(text);
+    const video = document.getElementsByTagName('video')[0];
+    const time = Math.floor(video.currentTime);
+    await addComments(videoId, text, time);
+  };
+
+  // return null;
   return (
     <div className="fixed top-0 right-0 h-20 z-[9999] bg-gray-200/20 flex text-xl gap-4">
-      <button className="px-4 py-2 rounded-full" onClick={emit}>
-        emit
-      </button>
+      <Add onAdd={t => addDanmaku(t)} />
     </div>
   );
 }
@@ -158,3 +147,21 @@ const style = {
   fontSize: '25px',
   textShadow: '-1px -1px #000, -1px 1px #000, 1px -1px #000, 1px 1px #000',
 };
+interface Comment {
+  text?: string;
+  /**
+   * @default rtl
+   */
+  mode?: 'ltr' | 'rtl' | 'top' | 'bottom';
+  /**
+   * Specified in seconds. Not required in live mode.
+   * @default media?.currentTime
+   */
+  time?: number;
+  style?: Partial<CSSStyleDeclaration> | CanvasRenderingContext2D;
+  /**
+   * A custom render to draw comment.
+   * When it exist, `text` and `style` will be ignored.
+   */
+  render?(): HTMLElement | HTMLCanvasElement;
+}

@@ -1,5 +1,5 @@
 import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
-import { host } from './app';
+import { host } from '@root/src/utils/consts';
 
 const getId = (id?: string) => {
   let finalId = id;
@@ -11,6 +11,13 @@ const getId = (id?: string) => {
 
   return finalId;
 };
+
+export const getDBList = async (id: string) => {
+  return await fetch(`${host}/youtube/list/api?id=${id}`, {
+    method: 'GET',
+  }).then(res => res.json());
+};
+
 export const getComments = async (id?: string) => {
   const finalId = getId(id);
   const res = await fetch(`${host}/youtube/api?id=${finalId}`, {

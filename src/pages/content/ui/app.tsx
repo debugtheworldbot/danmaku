@@ -24,8 +24,6 @@ interface Comment {
   render?(): HTMLElement | HTMLCanvasElement;
 }
 
-const isDev = false;
-export const host = isDev ? 'http://localhost:3000' : 'https://danmaku-backend.vercel.app';
 let timer: NodeJS.Timeout;
 export default function App() {
   const d = useRef(null);

@@ -11,14 +11,12 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   }, []);
 
   useEffect(() => {
-    console.log('add event');
     const trackKey = (e: KeyboardEvent) => {
       e.stopImmediatePropagation();
       if (e.key === 'Enter') {
         setVisible(true);
       }
       if (e.key === 'Escape') {
-        console.log('eeeeee');
         closePopup();
       }
     };
@@ -31,24 +29,39 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   if (!visible) return null;
 
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        if (!text) return;
-        onAdd(text);
-        closePopup();
-      }}
-      className="shadow-xl mx-auto bg-white flex gap-2 p-2 rounded-lg w-[60%] border">
-      <input
-        // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus={true}
-        className="border rounded-full flex-1 px-2 py-1"
-        value={text}
-        onChange={e => {
-          setText(e.target.value);
+    <div className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex ">
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!text) return;
+          onAdd(text);
+          closePopup();
         }}
-      />
-      <button type="submit">send</button>
-    </form>
+        className="shadow-xl mx-auto bg-white flex gap-2 p-2 rounded-lg w-[60%] border">
+        <input
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={true}
+          onKeyDown={e => {
+            e.stopPropagation();
+          }}
+          onKeyUp={e => {
+            e.stopPropagation();
+          }}
+          onKeyDownCapture={e => {
+            e.stopPropagation();
+          }}
+          onKeyUpCapture={e => {
+            e.stopPropagation();
+          }}
+          className="border rounded-full flex-1 px-2 py-1"
+          value={text}
+          onChange={e => {
+            setText(e.target.value);
+          }}
+        />
+        <button type="submit">send</button>
+      </form>
+    </div>
   );
 };

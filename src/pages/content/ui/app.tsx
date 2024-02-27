@@ -137,12 +137,7 @@ export default function App() {
     [videoId],
   );
 
-  // return null;
-  return (
-    <div className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex ">
-      <SendDashboard onAdd={addDanmaku} />
-    </div>
-  );
+  return <SendDashboard onAdd={addDanmaku} />;
 }
 const style = {
   fontSize: '25px',

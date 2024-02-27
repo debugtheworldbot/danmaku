@@ -145,9 +145,9 @@ export default function App() {
   );
 }
 const style = {
-  fontWeight: 'bold',
   fontSize: '25px',
-  textShadow: '-1px -1px #000, -1px 1px #000, 1px -1px #000, 1px 1px #000',
+  textShadow: '1px 0 1px #000000,0 1px 1px #000000,0 -1px 1px #000000,-1px 0 1px #000000',
+  opacity: '0.8',
 };
 interface Comment {
   text?: string;

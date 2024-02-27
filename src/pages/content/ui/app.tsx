@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { checkIsLive, getLiveChats, getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
-import { Add } from '../../popup/Popup';
+import { SendDashboard } from './SendDashboard';
 
 let timer: NodeJS.Timeout;
 export default function App() {
@@ -109,14 +109,13 @@ export default function App() {
     window.onresize = () => {
       d.current && d.current.resize();
     };
-    chrome.runtime.onMessage.addListener(async function (message) {
+    chrome.runtime.onMessage.addListener(message => {
       const id = message.id;
       if (!id) return;
       if (currentId.current === id) return;
       currentId.current = id;
       setVideoId(id);
-
-      await init(id);
+      init(id);
     });
   }, [init]);
   useEffect(() => {
@@ -128,17 +127,20 @@ export default function App() {
     }
   }, [config, init]);
 
-  const addDanmaku = async (text: string) => {
-    emit(text);
-    const video = document.getElementsByTagName('video')[0];
-    const time = Math.floor(video.currentTime);
-    await addComments(videoId, text, time);
-  };
+  const addDanmaku = useCallback(
+    async (text: string) => {
+      emit(text);
+      const video = document.getElementsByTagName('video')[0];
+      const time = Math.floor(video.currentTime);
+      await addComments(videoId, text, time);
+    },
+    [videoId],
+  );
 
   // return null;
   return (
-    <div className="fixed top-0 right-0 h-20 z-[9999] bg-gray-200/20 flex text-xl gap-4">
-      <Add onAdd={t => addDanmaku(t)} />
+    <div className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex ">
+      <SendDashboard onAdd={addDanmaku} />
     </div>
   );
 }

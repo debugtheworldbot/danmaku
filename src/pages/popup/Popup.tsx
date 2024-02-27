@@ -80,24 +80,4 @@ const Popup = () => {
   );
 };
 
-export const Add = (props: { onAdd: (text: string) => void }) => {
-  const { onAdd } = props;
-  const [text, setText] = useState('');
-
-  return (
-    <div>
-      <div>
-        text:
-        <input value={text} onChange={e => setText(e.target.value)} />
-      </div>
-      <button
-        onClick={() => {
-          onAdd(text);
-        }}>
-        Add
-      </button>
-    </div>
-  );
-};
-
 export default withErrorBoundary(withSuspense(Popup, <div> Loading ... </div>), <div> Error Occur </div>);

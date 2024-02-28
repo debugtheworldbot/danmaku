@@ -1,7 +1,7 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Display and send danmaku(chat overlay) at Youtube! developed with Vite, React, Typescript and love"
+    "message": "Display YouTube video comments with time tag and live chat messages as danmaku! Also support send danmaku."
   },
   "extensionName": {
     "description": "Extension name",

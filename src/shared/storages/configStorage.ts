@@ -2,14 +2,16 @@ import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/ba
 
 type Config = {
   enabled: boolean;
+  isLive: boolean;
 };
 
 type ConfigStorage = BaseStorage<Config> & {
-  toggle: (enabled: boolean) => Promise<void>;
+  update: (parload: Partial<Config>) => Promise<void>;
 };
 
 const fallbackConfig: Config = {
   enabled: true,
+  isLive: false,
 };
 
 const storage = createStorage<Config>('theme-storage-key', fallbackConfig, {
@@ -19,8 +21,11 @@ const storage = createStorage<Config>('theme-storage-key', fallbackConfig, {
 
 const configStorage: ConfigStorage = {
   ...storage,
-  toggle: async (enabled: boolean) => {
-    await storage.set({ enabled });
+  update: async state => {
+    await storage.set({
+      ...storage.getSnapshot(),
+      ...state,
+    });
   },
 };
 

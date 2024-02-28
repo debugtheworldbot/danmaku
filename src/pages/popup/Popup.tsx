@@ -47,17 +47,20 @@ const Popup = () => {
 
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
-    <div className="text-center">
+    <div className="text-center relative">
       <button
         onClick={() => {
           const res = !config.enabled;
           setTurnOn(res);
 
-          configStorage.toggle(res);
+          configStorage.update({ enabled: res });
         }}
         className="text-2xl font-medium">
         Danmaku: {config.enabled ? 'on' : 'off'}
       </button>
+      {config.isLive && (
+        <div className="absolute left-2 top-2 text-red-500 font-medium text-base animate-pulse"> live </div>
+      )}
       <div>{turnOn && 'refresh the page to take effect'}</div>
       {id ? (
         <main className="pl-4 pb-4 pr-1">

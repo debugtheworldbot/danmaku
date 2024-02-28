@@ -1,6 +1,9 @@
+import useStorage from '@root/src/shared/hooks/useStorage';
+import configStorage from '@root/src/shared/storages/configStorage';
 import { useCallback, useEffect, useState, useRef } from 'react';
 
 export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
+  const config = useStorage(configStorage);
   const { onAdd } = props;
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
@@ -48,6 +51,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
       if (e.key === 'Enter') {
         if (focusing.current) return console.log('ffffffocusing');
         if (window.location.pathname !== '/watch') return console.log('not a watch page');
+        if (config.isLive) return console.log('live mode');
         inputRef.current.focus();
         setVisible(true);
         e.stopImmediatePropagation();
@@ -61,7 +65,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     return () => {
       window.removeEventListener('keydown', trackKey);
     };
-  }, [closePopup]);
+  }, [closePopup, config.isLive]);
 
   return (
     <div

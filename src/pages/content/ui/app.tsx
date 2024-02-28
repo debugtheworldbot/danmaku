@@ -30,7 +30,11 @@ export default function App() {
       console.log('initLiveChats', channelId, pageToken);
       const { pollingIntervalMillis, nextPageToken, comments } = await emitLiveComments(channelId, pageToken);
       if (d.current) {
-        comments.forEach(comment => d.current.emit(comment));
+        comments.forEach(comment => {
+          setTimeout(() => {
+            d.current.emit(comment);
+          }, Math.random() * pollingIntervalMillis);
+        });
       } else {
         initDanmaku([]);
       }
@@ -100,6 +104,7 @@ export default function App() {
       timer && clearTimeout(timer);
       const liveChannelId = await checkIsLive(id);
       console.log('liveChannelId', liveChannelId);
+      configStorage.update({ isLive: !!liveChannelId });
       if (liveChannelId) return initLiveChats(liveChannelId);
       initComments(id);
     },
@@ -125,7 +130,7 @@ export default function App() {
       d.current?.destroy();
       clearTimeout(timer);
     }
-  }, [config, init]);
+  }, [config.enabled, init]);
 
   const addDanmaku = useCallback(
     async (text: string) => {

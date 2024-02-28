@@ -82,9 +82,9 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
           onAdd(text);
           closePopup();
         }}
-        className="drop-shadow-2xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60%] border">
-        <button className="bg-white/50 rounded-full w-10 h-10" type="button" onClick={closePopup}>
-          X
+        className="bg-gray-500/70 dark:bg-gray-500/50 shadow-xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60%] border border-gray-300 border-1 border-solid outline outline-black/50">
+        <button className="flex p-1 items-center bg-gray-300 rounded-full w-10 h-10" type="button" onClick={closePopup}>
+          <Close />
         </button>
         <input
           // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -102,16 +102,46 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
           onKeyUpCapture={e => {
             e.stopPropagation();
           }}
-          className="border rounded-full flex-1 px-4 py-2"
+          className="rounded-full flex-1 px-4 py-2 bg-gray-600/30 text-white outline-none border border-transparent focus:border-white"
           value={text}
           onChange={e => {
             setText(e.target.value);
           }}
         />
-        <button className="bg-white/50 rounded-full px-4 py-2" type="submit">
-          send
+        <button className="bg-gray-300 rounded-full px-4 py-2" type="submit">
+          Send
         </button>
       </form>
     </div>
   );
 };
+
+const Close = () => (
+  <svg viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clipPath="url(#clip0_14_12)">
+      <rect
+        x="92.2842"
+        y="28.6447"
+        width="10"
+        height="90"
+        rx="5"
+        transform="rotate(45 92.2842 28.6447)"
+        fill="#332E2E"
+      />
+      <rect
+        x="99.3555"
+        y="92.2843"
+        width="10"
+        height="90"
+        rx="5"
+        transform="rotate(135 99.3555 92.2843)"
+        fill="#332E2E"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_14_12">
+        <rect width="128" height="128" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);

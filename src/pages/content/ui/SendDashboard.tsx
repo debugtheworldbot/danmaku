@@ -26,7 +26,6 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
       focusing.current = false;
     };
     const inputs = document.getElementsByTagName('input');
-    console.log('inputs', inputs);
     [...inputs]
       .filter(i => i.type === 'text')
       .forEach(i => {
@@ -53,7 +52,8 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
         setVisible(true);
         e.stopImmediatePropagation();
       }
-      if (e.key === 'Escape') {
+      if (e.key === 'q' && e.ctrlKey) {
+        console.log('esc');
         closePopup();
       }
     };
@@ -78,7 +78,10 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
           onAdd(text);
           closePopup();
         }}
-        className="drop-shadow-2xl mx-auto backdrop-blur flex gap-4 p-4 rounded-full w-[60%] border">
+        className="drop-shadow-2xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60%] border">
+        <button className="bg-white/50 rounded-full w-10 h-10" type="button" onClick={closePopup}>
+          X
+        </button>
         <input
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={visible}
@@ -101,7 +104,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
             setText(e.target.value);
           }}
         />
-        <button className="bg-white/50 rounded-full px-4" type="submit">
+        <button className="bg-white/50 rounded-full px-4 py-2" type="submit">
           send
         </button>
       </form>

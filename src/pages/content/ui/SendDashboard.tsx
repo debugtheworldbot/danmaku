@@ -19,18 +19,28 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
       if (visible) return;
       focusing.current = true;
     };
-    window.addEventListener('focusin', focusin);
 
     const focusout = () => {
       console.log('listen blur');
       if (visible) return;
       focusing.current = false;
     };
-    window.addEventListener('focusout', focusout);
+    const inputs = document.getElementsByTagName('input');
+    console.log('inputs', inputs);
+    [...inputs]
+      .filter(i => i.type === 'text')
+      .forEach(i => {
+        i.addEventListener('focusin', focusin);
+        i.addEventListener('focusout', focusout);
+      });
 
     return () => {
-      window.removeEventListener('focusin', focusin);
-      window.removeEventListener('focusout', focusout);
+      [...inputs]
+        .filter(i => i.type === 'text')
+        .forEach(i => {
+          i.removeEventListener('focusin', focusin);
+          i.removeEventListener('focusout', focusout);
+        });
     };
   }, [visible]);
 
@@ -41,11 +51,11 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
         if (window.location.pathname !== '/watch') return console.log('not a watch page');
         inputRef.current.focus();
         setVisible(true);
+        e.stopImmediatePropagation();
       }
       if (e.key === 'Escape') {
         closePopup();
       }
-      e.stopImmediatePropagation();
     };
     window.addEventListener('keydown', trackKey, true);
     return () => {

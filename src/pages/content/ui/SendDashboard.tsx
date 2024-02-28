@@ -5,6 +5,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
   const focusing = useRef(false);
+  const inputRef = useRef(null);
 
   const closePopup = useCallback(() => {
     setVisible(false);
@@ -37,6 +38,8 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     const trackKey = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         if (focusing.current) return console.log('ffffffocusing');
+        if (window.location.pathname !== '/watch') return console.log('not a watch page');
+        inputRef.current.focus();
         setVisible(true);
       }
       if (e.key === 'Escape') {
@@ -48,12 +51,15 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     return () => {
       window.removeEventListener('keydown', trackKey);
     };
-  }, [closePopup, onAdd]);
-
-  if (!visible) return null;
+  }, [closePopup]);
 
   return (
-    <div className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex ">
+    <div
+      className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex transition-all"
+      style={{
+        opacity: visible ? '1' : '0',
+        transform: visible ? 'translateY(0) scale(1)' : 'translateY(20%) scale(0.95)',
+      }}>
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -62,10 +68,11 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
           onAdd(text);
           closePopup();
         }}
-        className="shadow-xl mx-auto bg-white flex gap-2 p-2 rounded-lg w-[60%] border">
+        className="drop-shadow-2xl mx-auto backdrop-blur flex gap-4 p-4 rounded-full w-[60%] border">
         <input
           // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={true}
+          autoFocus={visible}
+          ref={inputRef}
           onKeyDown={e => {
             e.stopPropagation();
           }}
@@ -78,13 +85,15 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
           onKeyUpCapture={e => {
             e.stopPropagation();
           }}
-          className="border rounded-full flex-1 px-2 py-1"
+          className="border rounded-full flex-1 px-4 py-2"
           value={text}
           onChange={e => {
             setText(e.target.value);
           }}
         />
-        <button type="submit">send</button>
+        <button className="bg-white/50 rounded-full px-4" type="submit">
+          send
+        </button>
       </form>
     </div>
   );

@@ -73,6 +73,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
       style={{
         opacity: visible ? '1' : '0',
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(20%) scale(0.95)',
+        pointerEvents: visible ? 'all' : 'none',
       }}>
       <form
         onSubmit={e => {

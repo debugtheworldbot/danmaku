@@ -21,7 +21,7 @@ const Popup = () => {
     console.log(tab.url);
     const isYoutube = tab.url.includes('https://www.youtube.com/watch?');
     if (!isYoutube) return '';
-    const id = tab.url.replace('https://www.youtube.com/watch?v=', '');
+    const id = new URL(tab.url).searchParams.get('v');
     setId(id);
     return id;
   }, []);

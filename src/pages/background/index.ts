@@ -8,7 +8,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log('tab updated!!', isYoutubeVid, tab.url);
 
   if (isYoutubeVid) {
-    const id = tab.url.replace('https://www.youtube.com/watch?v=', '');
+    const id = new URL(tab.url).searchParams.get('v');
     chrome.tabs.sendMessage(tabId, { id });
   }
 });

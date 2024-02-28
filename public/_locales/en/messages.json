@@ -1,7 +1,7 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "developed with Vite, React, Typescript and love"
+    "message": "Display and send danmaku(chat overlay) at Youtube! developed with Vite, React, Typescript and love"
   },
   "extensionName": {
     "description": "Extension name",

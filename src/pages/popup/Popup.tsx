@@ -5,6 +5,7 @@ import useStorage from '@root/src/shared/hooks/useStorage';
 import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
 import configStorage from '@root/src/shared/storages/configStorage';
 import { getComments } from '../content/ui/requests';
+import { formatTime } from '@root/src/utils/helpers';
 
 const Popup = () => {
   const danmakus = useStorage(danmakuStorage);
@@ -67,7 +68,7 @@ const Popup = () => {
           <ol className="list-disc text-base">
             {list?.map((comment, index) => (
               <li className="text-left" key={index}>
-                <span className="text-blue-600 mr-2">{comment?.time}</span>
+                <span className="text-blue-600 mr-2">{formatTime(comment?.time)}</span>
                 {comment.text}
               </li>
             ))}

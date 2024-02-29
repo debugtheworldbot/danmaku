@@ -1,6 +1,6 @@
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { checkIsLive, getLiveChats, getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
@@ -9,9 +9,8 @@ import { SendDashboard } from './SendDashboard';
 let timer: NodeJS.Timeout;
 export default function App() {
   const d = useRef(null);
-  const currentId = useRef(null);
   const config = useStorage(configStorage);
-  const [videoId, setVideoId] = useState('');
+  const videoId = config.videoId;
 
   const emitLiveComments = useCallback(async (channelId: string, pageToken?: string) => {
     const { pollingIntervalMillis, items, nextPageToken } = await getLiveChats({ channelId, pageToken });
@@ -110,19 +109,16 @@ export default function App() {
     },
     [initComments, initLiveChats],
   );
+
   useEffect(() => {
     window.onresize = () => {
       d.current && d.current.resize();
     };
-    chrome.runtime.onMessage.addListener(message => {
-      const id = message.id;
-      if (!id) return;
-      if (currentId.current === id) return;
-      currentId.current = id;
-      setVideoId(id);
-      init(id);
-    });
-  }, [init]);
+    if (videoId) {
+      init(videoId);
+    }
+  }, [init, videoId]);
+
   useEffect(() => {
     console.log('config update');
     if (!config.enabled) {

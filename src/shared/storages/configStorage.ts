@@ -3,6 +3,7 @@ import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/ba
 type Config = {
   enabled: boolean;
   isLive: boolean;
+  videoId: string;
 };
 
 type ConfigStorage = BaseStorage<Config> & {
@@ -12,6 +13,7 @@ type ConfigStorage = BaseStorage<Config> & {
 const fallbackConfig: Config = {
   enabled: true,
   isLive: false,
+  videoId: '',
 };
 
 const storage = createStorage<Config>('theme-storage-key', fallbackConfig, {

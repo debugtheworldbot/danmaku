@@ -9,6 +9,7 @@ import { SendDashboard } from './SendDashboard';
 let timer: NodeJS.Timeout;
 export default function App() {
   const d = useRef(null);
+  const videoSizeObserver = useRef(null);
   const config = useStorage(configStorage);
   const videoId = config.videoId;
 
@@ -88,6 +89,10 @@ export default function App() {
       speed: 144,
     });
     d.current = danmaku;
+    videoSizeObserver.current?.disconnect();
+    videoSizeObserver.current = new ResizeObserver(() => {
+      d.current?.resize();
+    }).observe(video);
   };
   const emit = async (text: string) => {
     const comment = {

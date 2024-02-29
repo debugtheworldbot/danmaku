@@ -6,7 +6,9 @@ import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
 
-let timer: NodeJS.Timeout;
+let livePollTimer: NodeJS.Timeout;
+const liveDelayTimer: NodeJS.Timeout[] = [];
+
 export default function App() {
   const d = useRef(null);
   const videoSizeObserver = useRef(null);
@@ -22,23 +24,24 @@ export default function App() {
         color: pickRandomColor(),
       },
     }));
-    return { pollingIntervalMillis, nextPageToken, comments };
+    return { pollingIntervalMillis, nextPageToken, comments: pageToken ? comments : [] };
   }, []);
 
   const initLiveChats = useCallback(
     async (channelId: string, pageToken?: string) => {
-      console.log('initLiveChats', channelId, pageToken);
       const { pollingIntervalMillis, nextPageToken, comments } = await emitLiveComments(channelId, pageToken);
       if (d.current) {
         comments.forEach(comment => {
-          setTimeout(() => {
-            d.current.emit(comment);
-          }, Math.random() * pollingIntervalMillis);
+          liveDelayTimer.push(
+            setTimeout(() => {
+              d.current?.emit(comment);
+            }, Math.random() * pollingIntervalMillis),
+          );
         });
       } else {
         initDanmaku([]);
       }
-      timer = setTimeout(() => {
+      livePollTimer = setTimeout(() => {
         initLiveChats(channelId, nextPageToken);
       }, pollingIntervalMillis);
     },
@@ -102,17 +105,21 @@ export default function App() {
     d.current.emit(comment);
   };
 
+  const clearTimers = useCallback(() => {
+    livePollTimer && clearTimeout(livePollTimer);
+    liveDelayTimer.forEach(clearTimeout);
+  }, []);
+
   const init = useCallback(
     async (id?: string) => {
-      console.log('new video id:', id);
-      timer && clearTimeout(timer);
+      clearTimers();
       const liveChannelId = await checkIsLive(id);
-      console.log('liveChannelId', liveChannelId);
+      console.log('new video id:', id, 'liveChannelId:', liveChannelId);
       configStorage.update({ isLive: !!liveChannelId });
       if (liveChannelId) return initLiveChats(liveChannelId);
       initComments(id);
     },
-    [initComments, initLiveChats],
+    [clearTimers, initComments, initLiveChats],
   );
 
   useEffect(() => {
@@ -129,9 +136,9 @@ export default function App() {
     if (!config.enabled) {
       console.log('destroy danmaku');
       d.current?.destroy();
-      clearTimeout(timer);
+      clearTimers();
     }
-  }, [config.enabled, init]);
+  }, [clearTimers, config.enabled, init]);
 
   const addDanmaku = useCallback(
     async (text: string) => {

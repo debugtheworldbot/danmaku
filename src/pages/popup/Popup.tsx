@@ -13,7 +13,6 @@ const Popup = () => {
   const [id, setId] = useState('');
   const [list, setList] = useState<YT_Response>([]);
   const [loading, setLoading] = useState(false);
-  const [turnOn, setTurnOn] = useState(false);
 
   const getCurrentTab = useCallback(async () => {
     const queryOptions = { active: true, currentWindow: true };
@@ -48,20 +47,10 @@ const Popup = () => {
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
     <div className="text-center relative">
-      <button
-        onClick={() => {
-          const res = !config.enabled;
-          setTurnOn(res);
-
-          configStorage.update({ enabled: res });
-        }}
-        className="text-2xl font-medium">
-        Danmaku: {config.enabled ? 'on' : 'off'}
-      </button>
+      <Switch checked={config.enabled} onChange={value => configStorage.update({ enabled: value })} />
       {config.isLive && (
         <div className="absolute left-2 top-2 text-red-500 font-medium text-base animate-pulse"> live </div>
       )}
-      <div>{turnOn && 'refresh the page to take effect'}</div>
       {id ? (
         <main className="pl-4 pb-4 pr-1">
           <button onClick={updateList} className="text-lg font-medium text-left">
@@ -78,8 +67,29 @@ const Popup = () => {
           </ol>
         </main>
       ) : (
-        <main className="text-2xl font-medium">not a youtube video</main>
+        <main className="mt-8 text-2xl font-medium">Visit youtube video to see danmakus!</main>
       )}
+    </div>
+  );
+};
+
+const Switch = (props: { checked: boolean; onChange: (value: boolean) => void }) => {
+  const [turnOn, setTurnOn] = useState(false);
+  return (
+    <div>
+      <label
+        onChange={() => {
+          const res = !props.checked;
+          props.onChange(res);
+          setTurnOn(res);
+        }}
+        className="inline-flex cursor-pointer items-center text-2xl font-medium">
+        <span className="mr-3">Danmaku</span>
+        <input type="checkbox" checked={props.checked} className="peer sr-only" />
+        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800" />
+      </label>
+
+      <div>{turnOn && 'refresh the page to take effect'}</div>
     </div>
   );
 };

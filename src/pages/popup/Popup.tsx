@@ -51,6 +51,12 @@ const Popup = () => {
       {config.isLive && (
         <div className="absolute left-2 top-2 text-red-500 font-medium text-base animate-pulse"> live </div>
       )}
+      <button
+        onClick={() => {
+          chrome.runtime.openOptionsPage();
+        }}>
+        options
+      </button>
       {id ? (
         <main className="pl-4 pb-4 pr-1">
           <button onClick={updateList} className="text-lg font-medium text-left">

@@ -56,7 +56,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
         setVisible(true);
         e.stopImmediatePropagation();
       }
-      if (e.key === 'q' && e.ctrlKey) {
+      if ((e.key === 'q' && e.ctrlKey) || e.key === 'Escape') {
         console.log('esc');
         closePopup();
       }

@@ -34,7 +34,7 @@ const manifest = {
   content_scripts: [
     {
       matches: ['https://www.youtube.com/*'],
-      js: ['src/pages/contentUi/index.js'],
+      js: ['src/pages/contentUI/index.js'],
     },
   ],
   devtools_page: 'src/pages/devtools/index.html',

@@ -100,7 +100,7 @@ const Switch = (props: { isLive: boolean; checked: boolean; onChange: (value: bo
       </label>
       <div className="flex-1 flex items-center">
         <Logo />
-        {!props.isLive && <Ping />}
+        {props.isLive && <Ping />}
         {turnOn && <div className="text-xs text-left ml-2 leading-3">plz refresh the page :)</div>}
       </div>
       <Options />

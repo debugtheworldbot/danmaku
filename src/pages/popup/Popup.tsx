@@ -11,7 +11,6 @@ import logo from '@assets/img/logo.png';
 const Popup = () => {
   const danmakus = useStorage(danmakuStorage);
   const config = useStorage(configStorage);
-  const [id, setId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const getCurrentTab = useCallback(async () => {
@@ -21,7 +20,7 @@ const Popup = () => {
     const isYoutube = tab.url.includes('https://www.youtube.com/watch?');
     if (!isYoutube) return '';
     const id = new URL(tab.url).searchParams.get('v');
-    setId(id);
+    configStorage.update({ videoId: id });
     return id;
   }, []);
 
@@ -47,10 +46,10 @@ const Popup = () => {
         checked={config.enabled}
         onChange={value => configStorage.update({ enabled: value })}
       />
-      {id ? (
+      {config.videoId ? (
         <main className="pl-2 mt-2 pr-1">
           <button className="absolute right-2 mt-1" onClick={updateList}>
-            {id}
+            {config.videoId}
           </button>
           <table className="table-auto text-left text-base">
             <thead>

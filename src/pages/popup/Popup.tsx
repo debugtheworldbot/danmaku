@@ -6,7 +6,7 @@ import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
 import configStorage from '@root/src/shared/storages/configStorage';
 import { getComments } from '../content/ui/requests';
 import { formatTime } from '@root/src/utils/helpers';
-import logo from '@assets/img/logo.png';
+import LottieAnim from './Lottie';
 
 const Popup = () => {
   const danmakus = useStorage(danmakuStorage);
@@ -26,17 +26,19 @@ const Popup = () => {
 
   const updateList = useCallback(async () => {
     const id = await getCurrentTab();
+    if (id === config.videoId) return;
+    configStorage.update({ videoId: id });
     if (!id) return;
     setLoading(true);
     const res = await getComments(id);
     setLoading(false);
     console.log('rrrrr', res);
     danmakuStorage.set(res);
-  }, [getCurrentTab]);
+  }, [config.videoId, getCurrentTab]);
 
   useEffect(() => {
-    getCurrentTab();
-  }, [getCurrentTab]);
+    getCurrentTab().then(updateList);
+  }, [getCurrentTab, updateList]);
 
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
@@ -73,8 +75,8 @@ const Popup = () => {
           </table>
         </main>
       ) : (
-        <main className="text-lg mb-2">
-          <img src={logo} alt="logo" className="w-40 block mx-auto" />
+        <main className="text-lg mb-2 px-8">
+          <LottieAnim />
           Visit a youtube video page to see danmakus!
         </main>
       )}

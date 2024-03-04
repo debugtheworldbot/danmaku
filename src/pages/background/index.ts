@@ -15,6 +15,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     configStorage.update({ videoId: id });
   } else {
     console.log('not a yt video');
-    configStorage.update({ videoId: '', isLive: false });
+    configStorage.reset();
   }
 });

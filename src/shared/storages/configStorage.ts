@@ -8,6 +8,7 @@ type Config = {
 
 type ConfigStorage = BaseStorage<Config> & {
   update: (parload: Partial<Config>) => Promise<void>;
+  reset: () => Promise<void>;
 };
 
 const fallbackConfig: Config = {
@@ -28,6 +29,9 @@ const configStorage: ConfigStorage = {
       ...storage.getSnapshot(),
       ...state,
     });
+  },
+  reset: async () => {
+    await storage.set(fallbackConfig);
   },
 };
 

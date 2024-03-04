@@ -96,7 +96,7 @@ const Switch = (props: { isLive: boolean; checked: boolean; onChange: (value: bo
         }}
         className="inline-flex cursor-pointer items-center text-2xl font-medium flex-1">
         <input type="checkbox" checked={props.checked} className="peer sr-only" />
-        <div className="flex-shrink-0 bg-gray-200 peer relative h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rtl:peer-checked:after:-translate-x-full" />
+        <div className="flex-shrink-0 bg-gray-200 peer relative h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full" />
         <Logo />
         {turnOn && <div className="text-xs text-left ml-2">plz refresh the page :)</div>}
         {props.isLive && <Ping />}

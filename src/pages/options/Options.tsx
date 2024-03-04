@@ -3,7 +3,7 @@ import React from 'react';
 const Checkbox = ({ checked }: { checked?: boolean }) => {
   return (
     <svg
-      className="w-5 h-5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+      className="w-5 h-5 me-2 text-green-500 flex-shrink-0"
       style={{
         color: checked ? 'green' : 'gray',
       }}
@@ -17,7 +17,7 @@ const Checkbox = ({ checked }: { checked?: boolean }) => {
 };
 
 const Kbd = (props: { text: string }) => (
-  <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+  <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
     {props.text}
   </kbd>
 );
@@ -34,11 +34,11 @@ const Options: React.FC = () => {
         </a>
       </aside>
       <main className="flex-1 text-2xl p-8">
-        <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">shortcuts</h2>
+        <h2 className="mb-2 text-lg font-semibold text-gray-900">shortcuts</h2>
 
         <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-400">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Key
@@ -49,14 +49,14 @@ const Options: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
+              <tr className="bg-white border-b">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                   <Kbd text="Enter" />
                 </th>
                 <td className="px-6 py-4">Open danmaku send dashboard</td>
               </tr>
-              <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
+              <tr className="bg-white border-b">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                   <Kbd text="Ctrl + q" />
                   <span className="mx-2">or</span>
                   <Kbd text="Esc" />
@@ -69,8 +69,8 @@ const Options: React.FC = () => {
           </table>
         </div>
 
-        <h2 className="mt-8 mb-2 text-lg font-semibold text-gray-900 dark:text-white">Support operations</h2>
-        <ul className="space-y-1 text-gray-500 list-inside dark:text-gray-400">
+        <h2 className="mt-8 mb-2 text-lg font-semibold text-gray-900">Support operations</h2>
+        <ul className="space-y-1 text-gray-500 list-inside">
           <li className="flex items-center gap-2">
             <Checkbox checked />
             Show comments with time tag as danmaku

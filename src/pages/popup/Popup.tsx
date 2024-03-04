@@ -42,25 +42,25 @@ const Popup = () => {
 
   if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
   return (
-    <div className="text-center relative pb-2">
+    <div className="text-center relative pb-2 px-4">
       <Switch
         isLive={config.isLive}
         checked={config.enabled}
         onChange={value => configStorage.update({ enabled: value })}
       />
       {config.videoId ? (
-        <main className="pl-2 mt-2 pr-1">
-          <button className="absolute right-2 mt-1" onClick={updateList}>
+        <main className="mt-2 relative">
+          <button className="absolute right-2 mt-2 text-gray-500" onClick={updateList}>
             {config.videoId}
           </button>
-          <table className="table-auto text-left text-base">
-            <thead>
+          <table className="table-auto text-left">
+            <thead className="text-lg">
               <tr>
                 <th>Time</th>
                 <th>Danmaku</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-base">
               {danmakus?.map(comment => (
                 <>
                   <tr>
@@ -75,7 +75,7 @@ const Popup = () => {
           </table>
         </main>
       ) : (
-        <main className="text-lg mb-2 px-8">
+        <main className="text-lg mb-6 px-8 pt-2 leading-5">
           <LottieAnim />
           Visit a youtube video page to see danmakus!
         </main>
@@ -87,20 +87,22 @@ const Popup = () => {
 const Switch = (props: { isLive: boolean; checked: boolean; onChange: (value: boolean) => void }) => {
   const [turnOn, setTurnOn] = useState(false);
   return (
-    <div className="flex items-center p-2 border-b-1">
+    <div className="flex items-center py-2 border-b-1 min-w-[300px]">
       <label
         onChange={() => {
           const res = !props.checked;
           props.onChange(res);
           setTurnOn(res);
         }}
-        className="inline-flex cursor-pointer items-center text-2xl font-medium flex-1">
+        className="inline-flex cursor-pointer items-center text-2xl font-medium">
         <input type="checkbox" checked={props.checked} className="peer sr-only" />
         <div className="flex-shrink-0 bg-gray-200 peer relative h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full" />
-        <Logo />
-        {turnOn && <div className="text-xs text-left ml-2">plz refresh the page :)</div>}
-        {props.isLive && <Ping />}
       </label>
+      <div className="flex-1 flex items-center">
+        <Logo />
+        {!props.isLive && <Ping />}
+        {turnOn && <div className="text-xs text-left ml-2 leading-3">plz refresh the page :)</div>}
+      </div>
       <Options />
     </div>
   );
@@ -110,7 +112,8 @@ const Options = () => (
   <button
     onClick={() => {
       chrome.runtime.openOptionsPage();
-    }}>
+    }}
+    className="hover:bg-gray-200 bg-transparent rounded-full py-1 px-1 transition-all">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"

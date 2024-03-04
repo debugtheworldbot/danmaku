@@ -3,7 +3,7 @@ import logoLottie from './danmucat_animate.json';
 
 export default function LottieAnim() {
   return (
-    <Player autoplay loop src={logoLottie} className="w-52">
+    <Player speed={1.25} autoplay loop src={logoLottie} className="w-40">
       <Controls visible={false} buttons={['play', 'repeat', 'frame', 'debug']} />
     </Player>
   );

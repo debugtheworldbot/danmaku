@@ -13,13 +13,26 @@ const getId = (id?: string) => {
   return finalId;
 };
 
+const getOrCreateClientId = async () => {
+  const result = await chrome.storage.local.get('clientId');
+  let clientId = result.clientId;
+  if (!clientId) {
+    // Generate a unique client ID, the actual value is not relevant
+    clientId = self.crypto.randomUUID();
+    await chrome.storage.local.set({ clientId });
+  }
+  return clientId;
+};
+
 export const addComments = async (id: string, text: string, time: number) => {
+  const clientId = await getOrCreateClientId();
   await fetch(`${host}/youtube/list/api`, {
     method: 'POST',
     body: JSON.stringify({
       text,
       videoId: id,
       time,
+      clientId,
     }),
   });
   return getComments(id);

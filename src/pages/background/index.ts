@@ -6,7 +6,7 @@ reloadOnUpdate('pages/background');
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   const isYoutubeVid = tab.url.includes('https://www.youtube.com/watch?');
-  console.log(' tab updated!!', isYoutubeVid, tab.url);
+  console.log('tab updated!!', isYoutubeVid, tab.url);
 
   if (isYoutubeVid) {
     console.log('is a yt video');

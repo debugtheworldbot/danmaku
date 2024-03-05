@@ -1,6 +1,15 @@
 name: release test
 
-on: push
+on: 
+  push:
+  # Sequence of patterns matched against refs/heads
+    branches:    
+      - main
+      - test
+      - 'test'
+    # Sequence of patterns matched against refs/tags
+    tags:        
+      - v*
 
 jobs:
   build:

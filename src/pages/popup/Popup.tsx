@@ -41,7 +41,7 @@ const Popup = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex justify-center items-center text-2xl font-medium">
+      <div className="flex justify-center items-center text-2xl font-medium p-10">
         <Loading />
       </div>
     );

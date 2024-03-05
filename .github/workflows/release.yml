@@ -1,6 +1,10 @@
 name: release test
 
-on: push
+on:
+  push:
+    branches:
+      - main
+      - test
 
 jobs:
   build:

@@ -4,6 +4,7 @@ type Config = {
   enabled: boolean;
   isLive: boolean;
   videoId: string;
+  loading: boolean;
 };
 
 type ConfigStorage = BaseStorage<Config> & {
@@ -15,6 +16,7 @@ const fallbackConfig: Config = {
   enabled: true,
   isLive: false,
   videoId: '',
+  loading: false,
 };
 
 const storage = createStorage<Config>('theme-storage-key', fallbackConfig, {

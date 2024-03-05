@@ -1,3 +1,4 @@
+import configStorage from '@root/src/shared/storages/configStorage';
 import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
 import { host } from '@root/src/utils/consts';
 
@@ -26,10 +27,12 @@ export const addComments = async (id: string, text: string, time: number) => {
 
 export const getComments = async (id?: string) => {
   const finalId = getId(id);
+  configStorage.update({ loading: true });
   const res = await fetch(`${host}/youtube/api?id=${finalId}`, {
     method: 'GET',
   }).then(res => res.json());
   console.log('danmakus', res.data);
+  configStorage.update({ loading: false });
   danmakuStorage.set(res.data);
   return res.data as YT_Response;
 };

@@ -7,11 +7,12 @@ import configStorage from '@root/src/shared/storages/configStorage';
 import { getComments } from '../content/ui/requests';
 import { formatTime } from '@root/src/utils/helpers';
 import LottieAnim from './Lottie';
+import Loading from './Loading';
 
 const Popup = () => {
   const danmakus = useStorage(danmakuStorage);
   const config = useStorage(configStorage);
-  const [loading, setLoading] = useState(false);
+  const loading = config.loading;
 
   const getCurrentTab = useCallback(async () => {
     const queryOptions = { active: true, currentWindow: true };
@@ -29,9 +30,7 @@ const Popup = () => {
     if (id === config.videoId) return;
     configStorage.update({ videoId: id });
     if (!id) return;
-    setLoading(true);
     const res = await getComments(id);
-    setLoading(false);
     console.log('rrrrr', res);
     danmakuStorage.set(res);
   }, [config.videoId, getCurrentTab]);
@@ -40,7 +39,12 @@ const Popup = () => {
     getCurrentTab().then(updateList);
   }, [getCurrentTab, updateList]);
 
-  if (loading) return <div className="h-screen flex justify-center items-center text-2xl font-medium">Loading...</div>;
+  if (loading)
+    return (
+      <div className="h-screen flex justify-center items-center text-2xl font-medium">
+        <Loading />
+      </div>
+    );
   return (
     <div className="text-center relative pb-2 px-4">
       <Switch

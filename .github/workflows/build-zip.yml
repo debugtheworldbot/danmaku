@@ -2,13 +2,21 @@ name: Build And Upload Extension Zip Via Artifact
 
 on:
   push:
-    branches: [ main ]
+    branches:    
+      - main
+      - test
+    # Sequence of patterns matched against refs/tags
+    tags:        
+      - v*
   pull_request:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v3
@@ -32,3 +40,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: dist/*
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

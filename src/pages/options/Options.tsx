@@ -1,11 +1,12 @@
 import React from 'react';
+import LottieAnim from '../popup/Lottie';
 
 const Checkbox = ({ checked }: { checked?: boolean }) => {
   return (
     <svg
       className="w-5 h-5 me-2 text-green-500 flex-shrink-0"
       style={{
-        color: checked ? 'green' : 'gray',
+        color: checked ? '#4AB94B' : 'gray',
       }}
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
@@ -25,20 +26,20 @@ const Kbd = (props: { text: string }) => (
 const Options: React.FC = () => {
   return (
     <div className="flex">
-      <aside className="flex flex-col gap-4 text-2xl bg-gray-100 h-screen p-6">
-        <button className="text-blue-400">HELP</button>
+      <aside className="flex flex-col gap-4 text-xl font-medium bg-slate-100 h-screen p-6">
+        <button className="text-primary font-medium">HELP</button>
 
         <hr />
         <a rel="noreferrer" target="_blank" href="https://github.com/debugtheworldbot/danmaku/issues">
           Feedback
         </a>
       </aside>
-      <main className="flex-1 text-2xl p-8">
-        <h2 className="mb-2 text-lg font-semibold text-gray-900">shortcuts</h2>
+      <main className="flex-1 p-8 flex flex-col">
+        <h2 className="mb-4 text-2xl font-semibold text-gray-900">Shortcuts</h2>
 
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <thead className="text-xs text-gray-700 uppercase bg-slate-100">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Key
@@ -52,6 +53,8 @@ const Options: React.FC = () => {
               <tr className="bg-white border-b">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap">
                   <Kbd text="Enter" />
+                  <span className="mx-2">or</span>
+                  <Kbd text="return" />
                 </th>
                 <td className="px-6 py-4">Open danmaku send dashboard</td>
               </tr>
@@ -61,16 +64,19 @@ const Options: React.FC = () => {
                   <span className="mx-2">or</span>
                   <Kbd text="Esc" />
                 </th>
-                <td className="px-6 py-4">
-                  Close danmaku send dashboard(suggest use Ctrl + q, beacuse esc will quit fullscreen mode.)
+                <td className="px-6 py-4 leading-8">
+                  <div>Close danmaku send dashboard</div>
+                  suggest use <Kbd text="Ctrl + q" />, beacuse
+                  <Kbd text="Esc" />
+                  will quit fullscreen mode :)
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2 className="mt-8 mb-2 text-lg font-semibold text-gray-900">Support operations</h2>
-        <ul className="space-y-1 text-gray-500 list-inside">
+        <h2 className="mt-8 mb-4 text-2xl font-semibold text-gray-900">Support operations</h2>
+        <ul className="space-y-1 text-lg list-inside">
           <li className="flex items-center gap-2">
             <Checkbox checked />
             Show comments with time tag as danmaku
@@ -84,6 +90,10 @@ const Options: React.FC = () => {
             Send real time danmaku
           </li>
         </ul>
+
+        <div className="my-auto">
+          <LottieAnim />
+        </div>
       </main>
     </div>
   );

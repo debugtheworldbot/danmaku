@@ -1,5 +1,5 @@
 import React from 'react';
-import LottieAnim from '../popup/Lottie';
+import IdleAnim from '../popup/components/IdleAnim';
 
 const Checkbox = ({ checked }: { checked?: boolean }) => {
   return (
@@ -92,7 +92,7 @@ const Options: React.FC = () => {
         </ul>
 
         <div className="my-auto">
-          <LottieAnim />
+          <IdleAnim />
         </div>
       </main>
     </div>

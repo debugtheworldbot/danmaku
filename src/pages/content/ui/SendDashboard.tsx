@@ -1,6 +1,7 @@
 import useStorage from '@root/src/shared/hooks/useStorage';
 import configStorage from '@root/src/shared/storages/configStorage';
 import { useCallback, useEffect, useState, useRef } from 'react';
+import { Rnd } from 'react-rnd';
 
 export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   const config = useStorage(configStorage);
@@ -75,44 +76,56 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(20%) scale(0.95)',
         pointerEvents: visible ? 'all' : 'none',
       }}>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (!text) return;
-          onAdd(text);
-          closePopup();
-        }}
-        className="bg-gray-500/70 dark:bg-gray-500/50 shadow-xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60%] border border-gray-300 border-1 border-solid outline outline-black/50">
-        <button className="flex p-1 items-center bg-gray-300 rounded-full w-10 h-10" type="button" onClick={closePopup}>
-          <Close />
-        </button>
-        <input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus={visible}
-          ref={inputRef}
-          onKeyDown={e => {
+      <Rnd
+        className="border rounded-full"
+        default={{
+          x: 0,
+          y: 0,
+          width: 'fit-content',
+          height: 'fit-content',
+        }}>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
             e.stopPropagation();
+            if (!text) return;
+            onAdd(text);
+            closePopup();
           }}
-          onKeyUp={e => {
-            e.stopPropagation();
-          }}
-          onKeyDownCapture={e => {
-            e.stopPropagation();
-          }}
-          onKeyUpCapture={e => {
-            e.stopPropagation();
-          }}
-          className="rounded-full flex-1 px-4 py-2 bg-gray-600/30 text-white outline-none border border-transparent focus:border-white"
-          value={text}
-          onChange={e => {
-            setText(e.target.value);
-          }}
-        />
-        <button className="bg-gray-300 rounded-full px-4 py-2" type="submit">
-          Send
-        </button>
-      </form>
+          className="bg-gray-500/70 dark:bg-gray-500/50 shadow-xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60vw] border border-gray-300 border-1 border-solid outline outline-black/50">
+          <button
+            className="flex p-1 items-center bg-gray-300 rounded-full w-10 h-10"
+            type="button"
+            onClick={closePopup}>
+            <Close />
+          </button>
+          <input
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus={visible}
+            ref={inputRef}
+            onKeyDown={e => {
+              e.stopPropagation();
+            }}
+            onKeyUp={e => {
+              e.stopPropagation();
+            }}
+            onKeyDownCapture={e => {
+              e.stopPropagation();
+            }}
+            onKeyUpCapture={e => {
+              e.stopPropagation();
+            }}
+            className="rounded-full flex-1 px-4 py-2 bg-gray-600/30 text-white outline-none border border-transparent focus:border-white"
+            value={text}
+            onChange={e => {
+              setText(e.target.value);
+            }}
+          />
+          <button className="bg-gray-300 rounded-full px-4 py-2" type="submit">
+            Send
+          </button>
+        </form>
+      </Rnd>
     </div>
   );
 };

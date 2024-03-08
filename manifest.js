@@ -33,7 +33,7 @@ const manifest = {
   },
   content_scripts: [
     {
-      matches: ['https://www.youtube.com/*'],
+      matches: ['https://www.youtube.com/*', 'https://danmaku.js.org/*'],
       js: ['src/pages/contentUI/index.js'],
     },
   ],

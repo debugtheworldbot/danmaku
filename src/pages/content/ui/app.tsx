@@ -5,12 +5,13 @@ import { checkIsLive, getLiveChats, getComments, addComments } from './requests'
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
+import { danmakuStyle, renderHtml } from './utils';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
 
 export default function App() {
-  const d = useRef(null);
+  const d = useRef<Danmaku>(null);
   const videoSizeObserver = useRef(null);
   const config = useStorage(configStorage);
   const videoId = config.videoId;
@@ -20,7 +21,7 @@ export default function App() {
     const comments = items.map(l => ({
       text: l.text,
       style: {
-        ...style,
+        ...danmakuStyle,
         color: pickRandomColor(),
       },
     }));
@@ -53,10 +54,7 @@ export default function App() {
     const list = await getComments(id);
     const comments = list.map(l => ({
       ...l,
-      style: {
-        ...style,
-        color: pickRandomColor(),
-      },
+      render: () => renderHtml(l.text),
     }));
     const video = document.getElementsByTagName('video')[0];
     console.log('init video', video);
@@ -82,7 +80,7 @@ export default function App() {
       media: video,
 
       // 预设的弹幕数据数组，在媒体模式中使用。在 emit API 中有说明格式。
-      comments: comments,
+      comments,
 
       // 支持 DOM 引擎和 canvas 引擎。canvas 引擎比 DOM 更高效，但相对更耗内存。
       // 完整版本中默认为 DOM 引擎。
@@ -97,13 +95,25 @@ export default function App() {
       d.current?.resize();
     }).observe(video);
   };
-  const emit = async (text: string) => {
-    const comment = {
-      text,
-      style,
-    };
-    d.current.emit(comment);
-  };
+  const emit = useCallback(async (text: string, type: 'html' | 'text' = 'html') => {
+    if (type === 'text') {
+      const comment = {
+        text,
+        style: {
+          ...danmakuStyle,
+          color: pickRandomColor(),
+        },
+      };
+
+      d.current.emit(comment);
+      return;
+    }
+    d.current.emit({
+      render: () => {
+        return renderHtml(text);
+      },
+    });
+  }, []);
 
   const clearTimers = useCallback(() => {
     livePollTimer && clearTimeout(livePollTimer);
@@ -147,16 +157,18 @@ export default function App() {
       const time = Math.floor(video.currentTime);
       await addComments(videoId, text, time);
     },
-    [videoId],
+    [emit, videoId],
   );
 
-  return <SendDashboard onAdd={addDanmaku} />;
+  return (
+    <div>
+      <button onClick={() => initDanmaku([])} className="fixed top-0 right-0 z-100 bg-black">
+        ininininit
+      </button>
+      <SendDashboard onAdd={addDanmaku} />;
+    </div>
+  );
 }
-const style = {
-  fontSize: '25px',
-  textShadow: '1px 0 1px #000000,0 1px 1px #000000,0 -1px 1px #000000,-1px 0 1px #000000',
-  opacity: '0.8',
-};
 interface Comment {
   text?: string;
   /**

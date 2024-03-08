@@ -71,7 +71,7 @@ const Popup = () => {
                   <td className="align-top text-center">
                     <span className="text-blue-600 mr-2">{formatTime(comment?.time)}</span>
                   </td>
-                  <td className="min-w-[300px]">{comment.text}</td>
+                  <td dangerouslySetInnerHTML={{ __html: comment.text }} className="min-w-[300px]" />
                 </tr>
               ))}
             </tbody>

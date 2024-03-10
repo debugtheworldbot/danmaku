@@ -1,7 +1,7 @@
 import { pickRandomColor } from '@root/src/utils/consts';
 
 export const renderHtml = (text: string) => {
-  const toNodes = (html: string) => new DOMParser().parseFromString(html, 'text/html').documentElement;
+  const toNodes = (html: string) => new DOMParser().parseFromString(html, 'text/html').body.firstChild;
   return toNodes(`<div style='${styleString};color:${pickRandomColor()}'>${text}</div>`);
 };
 

@@ -1,14 +1,45 @@
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { useEffect, useRef, useCallback } from 'react';
-import { checkIsLive, getLiveChats, getComments, addComments } from './requests';
+import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
 import { danmakuStyle, renderHtml } from './utils';
+import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
+
+let prevID: string[] = [];
+const queryLiveChats = () => {
+  const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
+  const liveStatusChanged = configStorage.getSnapshot().isLive !== !!chatFrame;
+  if (liveStatusChanged) {
+    configStorage.update({ isLive: !!chatFrame });
+  }
+  if (!chatFrame) return [];
+  return Array.from(
+    chatFrame.contentDocument.querySelectorAll('yt-live-chat-paid-message-renderer,yt-live-chat-text-message-renderer'),
+  )
+    .slice(-10)
+    .map(node => {
+      const nextID = node.id;
+
+      if (prevID.includes(nextID)) return;
+      prevID = [...prevID, nextID].slice(-20);
+      const text = (node.querySelector('#message') as HTMLElement).innerText;
+      danmakuStorage.push([{ text }]);
+      return {
+        text,
+        style: {
+          ...danmakuStyle,
+          color: pickRandomColor(),
+        },
+      };
+    })
+    .filter(Boolean);
+};
 
 export default function App() {
   const d = useRef<Danmaku>(null);
@@ -16,38 +47,24 @@ export default function App() {
   const config = useStorage(configStorage);
   const videoId = config.videoId;
 
-  const emitLiveComments = useCallback(async (channelId: string, pageToken?: string) => {
-    const { pollingIntervalMillis, items, nextPageToken } = await getLiveChats({ channelId, pageToken });
-    const comments = items.map(l => ({
-      text: l.text,
-      style: {
-        ...danmakuStyle,
-        color: pickRandomColor(),
-      },
-    }));
-    return { pollingIntervalMillis, nextPageToken, comments: pageToken ? comments : [] };
+  const initLiveChats = useCallback(async () => {
+    const pollingIntervalMillis = 2000;
+    const comments = queryLiveChats();
+    if (d.current) {
+      comments.forEach(comment => {
+        liveDelayTimer.push(
+          setTimeout(() => {
+            d.current?.emit(comment);
+          }, Math.random() * pollingIntervalMillis),
+        );
+      });
+    } else {
+      initDanmaku([]);
+    }
+    livePollTimer = setTimeout(() => {
+      initLiveChats();
+    }, pollingIntervalMillis);
   }, []);
-
-  const initLiveChats = useCallback(
-    async (channelId: string, pageToken?: string) => {
-      const { pollingIntervalMillis, nextPageToken, comments } = await emitLiveComments(channelId, pageToken);
-      if (d.current) {
-        comments.forEach(comment => {
-          liveDelayTimer.push(
-            setTimeout(() => {
-              d.current?.emit(comment);
-            }, Math.random() * pollingIntervalMillis),
-          );
-        });
-      } else {
-        initDanmaku([]);
-      }
-      livePollTimer = setTimeout(() => {
-        initLiveChats(channelId, nextPageToken);
-      }, pollingIntervalMillis);
-    },
-    [emitLiveComments],
-  );
 
   const initComments = useCallback(async (id?: string) => {
     console.log('initComments', id);
@@ -121,10 +138,7 @@ export default function App() {
   const init = useCallback(
     async (id?: string) => {
       clearTimers();
-      const liveChannelId = await checkIsLive(id);
-      console.log('new video id:', id, 'liveChannelId:', liveChannelId);
-      configStorage.update({ isLive: !!liveChannelId });
-      if (liveChannelId) return initLiveChats(liveChannelId);
+      initLiveChats();
       initComments(id);
     },
     [clearTimers, initComments, initLiveChats],
@@ -160,9 +174,6 @@ export default function App() {
 
   return (
     <div>
-      <button onClick={() => initDanmaku([])} className="fixed top-0 right-0 z-100 bg-black">
-        ininininit
-      </button>
       <SendDashboard onAdd={addDanmaku} />;
     </div>
   );

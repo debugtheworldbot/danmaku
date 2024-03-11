@@ -5,41 +5,10 @@ import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { danmakuStyle, renderHtml } from './utils';
-import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
+import { danmakuStyle, queryLiveChats, renderHtml } from './utils';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
-
-let prevID: string[] = [];
-const queryLiveChats = () => {
-  const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-  const liveStatusChanged = configStorage.getSnapshot().isLive !== !!chatFrame;
-  if (liveStatusChanged) {
-    configStorage.update({ isLive: !!chatFrame });
-  }
-  if (!chatFrame) return [];
-  return Array.from(
-    chatFrame.contentDocument.querySelectorAll('yt-live-chat-paid-message-renderer,yt-live-chat-text-message-renderer'),
-  )
-    .slice(-10)
-    .map(node => {
-      const nextID = node.id;
-
-      if (prevID.includes(nextID)) return;
-      prevID = [...prevID, nextID].slice(-20);
-      const text = (node.querySelector('#message') as HTMLElement).innerText;
-      danmakuStorage.push([{ text }]);
-      return {
-        text,
-        style: {
-          ...danmakuStyle,
-          color: pickRandomColor(),
-        },
-      };
-    })
-    .filter(Boolean);
-};
 
 export default function App() {
   const d = useRef<Danmaku>(null);

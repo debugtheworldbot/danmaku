@@ -109,9 +109,7 @@ export default function App() {
       return;
     }
     d.current.emit({
-      render: () => {
-        return renderHtml(text);
-      },
+      render: () => renderHtml(text),
     });
   }, []);
 

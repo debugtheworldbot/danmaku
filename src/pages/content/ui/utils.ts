@@ -17,16 +17,11 @@ const styleString = Object.entries(danmakuStyle)
   .join(';');
 
 export const checkIsLive = () => {
-  const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-  const isLive = !!chatFrame;
-  configStorage.update({ isLive });
-  if (!isLive) {
-    setTimeout(() => {
-      const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-      const isLive = !!chatFrame;
-      configStorage.update({ isLive });
-    }, 2000);
-  }
+  setTimeout(() => {
+    const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
+    const isLive = !!chatFrame;
+    configStorage.update({ isLive });
+  }, 2000);
 };
 const prevID: string[] = [];
 export const queryLiveChats = () => {

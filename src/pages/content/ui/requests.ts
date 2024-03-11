@@ -50,15 +50,6 @@ export const getComments = async (id?: string) => {
   return res.data as YT_Response;
 };
 
-export const checkIsLive = async (id?: string) => {
-  const finalId = getId(id);
-  const res = await fetch(`${host}/youtube/checkLive?id=${finalId}`, {
-    method: 'GET',
-  }).then(res => res.json());
-  const channelId = res.channelId;
-  return channelId;
-};
-
 export const getLiveChats = async ({ channelId, pageToken }: { channelId: string; pageToken?: string }) => {
   const pageTokenParam = pageToken ? `&pageToken=${pageToken}` : '';
   const res = await fetch(`${host}/youtube/live?channelId=${channelId}${pageTokenParam}`, {

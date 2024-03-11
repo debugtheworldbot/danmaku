@@ -5,7 +5,7 @@ import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { danmakuStyle, queryLiveChats, renderHtml } from './utils';
+import { checkIsLive, danmakuStyle, queryLiveChats, renderHtml } from './utils';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
@@ -16,23 +16,27 @@ export default function App() {
   const config = useStorage(configStorage);
   const videoId = config.videoId;
 
-  const initLiveChats = useCallback(async () => {
-    const pollingIntervalMillis = 2000;
-    const comments = queryLiveChats();
-    if (d.current) {
-      comments.forEach(comment => {
-        liveDelayTimer.push(
-          setTimeout(() => {
-            d.current?.emit(comment);
-          }, Math.random() * pollingIntervalMillis),
-        );
-      });
-    } else {
-      initDanmaku([]);
+  const initLiveChats = useCallback(() => {
+    try {
+      const pollingIntervalMillis = 2000;
+      const comments = queryLiveChats();
+      if (d.current) {
+        comments.forEach(comment => {
+          liveDelayTimer.push(
+            setTimeout(() => {
+              d.current?.emit(comment);
+            }, Math.random() * pollingIntervalMillis),
+          );
+        });
+      } else {
+        initDanmaku([]);
+      }
+      livePollTimer = setTimeout(() => {
+        initLiveChats();
+      }, pollingIntervalMillis);
+    } catch (e) {
+      console.log(e);
     }
-    livePollTimer = setTimeout(() => {
-      initLiveChats();
-    }, pollingIntervalMillis);
   }, []);
 
   const initComments = useCallback(async (id?: string) => {
@@ -107,11 +111,17 @@ export default function App() {
   const init = useCallback(
     async (id?: string) => {
       clearTimers();
-      initLiveChats();
       initComments(id);
+      checkIsLive();
     },
-    [clearTimers, initComments, initLiveChats],
+    [clearTimers, initComments],
   );
+
+  useEffect(() => {
+    if (config.isLive) {
+      initLiveChats();
+    }
+  }, [config.isLive, initLiveChats]);
 
   useEffect(() => {
     window.onresize = () => {

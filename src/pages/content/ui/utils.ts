@@ -16,11 +16,22 @@ const styleString = Object.entries(danmakuStyle)
   .map(([k, v]) => `${k.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${v}`)
   .join(';');
 
+export const checkIsLive = () => {
+  const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
+  const isLive = !!chatFrame;
+  configStorage.update({ isLive });
+  if (!isLive) {
+    setTimeout(() => {
+      const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
+      const isLive = !!chatFrame;
+      configStorage.update({ isLive });
+    }, 2000);
+  }
+};
 const prevID: string[] = [];
 export const queryLiveChats = () => {
   const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-  configStorage.update({ isLive: !!chatFrame });
-  if (!chatFrame) return [];
+  if (!chatFrame) throw new Error('No chat frame');
   return Array.from(
     chatFrame.contentDocument.querySelectorAll('yt-live-chat-paid-message-renderer,yt-live-chat-text-message-renderer'),
   )

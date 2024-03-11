@@ -119,8 +119,10 @@ export default function App() {
     };
     if (videoId) {
       init(videoId);
+    } else {
+      clearTimers();
     }
-  }, [init, videoId]);
+  }, [clearTimers, init, videoId]);
 
   useEffect(() => {
     console.log('config update');

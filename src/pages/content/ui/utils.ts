@@ -19,10 +19,7 @@ const styleString = Object.entries(danmakuStyle)
 const prevID: string[] = [];
 export const queryLiveChats = () => {
   const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-  const liveStatusChanged = configStorage.getSnapshot().isLive !== !!chatFrame;
-  if (liveStatusChanged) {
-    configStorage.update({ isLive: !!chatFrame });
-  }
+  configStorage.update({ isLive: !!chatFrame });
   if (!chatFrame) return [];
   return Array.from(
     chatFrame.contentDocument.querySelectorAll('yt-live-chat-paid-message-renderer,yt-live-chat-text-message-renderer'),

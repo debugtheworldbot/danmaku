@@ -1,7 +1,33 @@
 import configStorage from '@root/src/shared/storages/configStorage';
 import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
 import { pickRandomColor } from '@root/src/utils/consts';
+import Danmaku from 'danmaku';
+import { DComment } from './types';
 
+export const createDanmakuStage = (comments: DComment[]) => {
+  const video = document.getElementsByTagName('video')[0];
+  const container = video.parentNode as HTMLElement;
+  container.style.height = '100%';
+  console.log('damnaku loaded', video);
+  const danmaku = new Danmaku({
+    // 必填。用于显示弹幕的「舞台」会被添加到该容器中。
+    container,
+
+    // 媒体可以是 <video> 或 <audio> 元素，如果未提供，会变成实时模式。
+    media: video,
+
+    // 预设的弹幕数据数组，在媒体模式中使用。在 emit API 中有说明格式。
+    comments,
+
+    // 支持 DOM 引擎和 canvas 引擎。canvas 引擎比 DOM 更高效，但相对更耗内存。
+    // 完整版本中默认为 DOM 引擎。
+    engine: 'dom',
+
+    // 弹幕速度，也可以用 speed API 设置。
+    speed: 144,
+  });
+  return { danmaku, video };
+};
 export const renderHtml = (text: string) => {
   const toNodes = (html: string) => new DOMParser().parseFromString(html, 'text/html').body.firstChild as HTMLElement;
   return toNodes(`<div style='${styleString};color:${pickRandomColor()}'>${text}</div>`);

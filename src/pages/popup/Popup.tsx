@@ -69,7 +69,7 @@ const Popup = () => {
               {danmakus.map((comment, index) => (
                 <tr key={index}>
                   <td className="align-top text-center">
-                    <span className="text-blue-600 mr-2">{formatTime(comment?.time)}</span>
+                    <span className="text-primary mr-2">{formatTime(comment?.time)}</span>
                   </td>
                   <td dangerouslySetInnerHTML={{ __html: comment.text }} className="min-w-[300px]" />
                 </tr>

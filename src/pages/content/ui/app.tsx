@@ -5,7 +5,7 @@ import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { checkIsLive, createDanmakuStage, danmakuStyle, queryLiveChats, renderHtml } from './utils';
+import { checkIsLive, createDanmakuStage, danmakuStyle, delay, queryLiveChats, renderHtml } from './utils';
 import { DComment } from './types';
 
 let livePollTimer: NodeJS.Timeout;
@@ -49,10 +49,10 @@ export default function App() {
     }));
     const video = document.getElementsByTagName('video')[0];
     console.log('init video', video);
-    if (!video)
-      return setTimeout(() => {
-        initComments(id);
-      }, 1000);
+    if (!video) {
+      await delay(1000);
+      initComments(id);
+    }
 
     initDanmaku(comments);
   }, []);
@@ -94,10 +94,13 @@ export default function App() {
   const init = useCallback(
     async (id?: string) => {
       clearTimers();
-      initComments(id);
-      checkIsLive();
+      await initComments(id);
+      const isLive = await checkIsLive();
+      if (isLive) {
+        initLiveChats();
+      }
     },
-    [clearTimers, initComments],
+    [clearTimers, initComments, initLiveChats],
   );
 
   const addDanmaku = useCallback(
@@ -109,12 +112,6 @@ export default function App() {
     },
     [emit, videoId],
   );
-
-  useEffect(() => {
-    if (config.isLive) {
-      initLiveChats();
-    }
-  }, [config.isLive, initLiveChats]);
 
   useEffect(() => {
     if (videoId && config.enabled) {

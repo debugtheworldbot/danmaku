@@ -42,12 +42,12 @@ const styleString = Object.entries(danmakuStyle)
   .map(([k, v]) => `${k.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${v}`)
   .join(';');
 
-export const checkIsLive = () => {
-  setTimeout(() => {
-    const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
-    const isLive = !!chatFrame;
-    configStorage.update({ isLive });
-  }, 2000);
+export const checkIsLive = async () => {
+  await delay(2000);
+  const chatFrame = document.querySelector('iframe#chatframe') as HTMLIFrameElement;
+  const isLive = !!chatFrame;
+  configStorage.update({ isLive });
+  return isLive;
 };
 const prevID: string[] = [];
 export const queryLiveChats = () => {
@@ -75,3 +75,5 @@ export const queryLiveChats = () => {
     })
     .filter(Boolean);
 };
+
+export const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time));

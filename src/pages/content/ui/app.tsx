@@ -117,21 +117,13 @@ export default function App() {
   }, [config.isLive, initLiveChats]);
 
   useEffect(() => {
-    if (videoId) {
+    if (videoId && config.enabled) {
       init(videoId);
-    } else {
-      clearTimers();
+      return;
     }
-  }, [clearTimers, init, videoId]);
-
-  useEffect(() => {
-    console.log('config update');
-    if (!config.enabled) {
-      console.log('destroy danmaku');
-      d.current?.destroy();
-      clearTimers();
-    }
-  }, [clearTimers, config.enabled, init]);
+    d.current?.destroy();
+    clearTimers();
+  }, [clearTimers, config.enabled, init, videoId]);
 
   return (
     <div>

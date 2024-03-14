@@ -1,14 +1,10 @@
-import { useState } from 'react';
-
 export const Switch = (props: { isLive: boolean; checked: boolean; onChange: (value: boolean) => void }) => {
-  const [turnOn, setTurnOn] = useState(false);
   return (
     <div className="flex items-center py-2 border-b-1 min-w-[300px]">
       <label
         onChange={() => {
           const res = !props.checked;
           props.onChange(res);
-          setTurnOn(res);
         }}
         className="inline-flex cursor-pointer items-center text-2xl font-medium">
         <input type="checkbox" checked={props.checked} className="peer sr-only" />
@@ -17,7 +13,6 @@ export const Switch = (props: { isLive: boolean; checked: boolean; onChange: (va
       <div className="flex-1 flex items-center">
         <Logo />
         {props.isLive && <Ping />}
-        {turnOn && <div className="text-xs text-left ml-2 leading-3">plz refresh the page :)</div>}
       </div>
       <Options />
     </div>

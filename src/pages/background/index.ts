@@ -18,3 +18,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     configStorage.reset();
   }
 });
+
+chrome.runtime.onInstalled.addListener(object => {
+  const externalUrl = 'https://danmaku.istiancz.xyz';
+
+  if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    chrome.tabs.create({ url: externalUrl }, () => {
+      console.log('New tab launched with ', externalUrl);
+    });
+  }
+});

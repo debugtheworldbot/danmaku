@@ -8,7 +8,7 @@ type Config = {
 };
 
 type ConfigStorage = BaseStorage<Config> & {
-  update: (parload: Partial<Config>) => Promise<void>;
+  update: (payload: Partial<Config>) => Promise<void>;
   reset: () => Promise<void>;
 };
 

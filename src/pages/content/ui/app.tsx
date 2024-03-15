@@ -5,11 +5,12 @@ import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { checkIsLive, createDanmakuStage, danmakuStyle, delay, queryLiveChats, renderHtml } from './utils';
+import { checkIsLive, createDanmakuStage, delay, getDanmakuStyle, queryLiveChats, renderHtml } from './utils';
 import { DComment } from './types';
 import { createRoot } from 'react-dom/client';
 import ControlPannel from './ControlPannel';
 import { injectControl } from './injectControl';
+import styleStorage from '@root/src/shared/storages/styleStorage';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
@@ -18,7 +19,14 @@ export default function App() {
   const d = useRef<Danmaku>(null);
   const videoSizeObserver = useRef<ResizeObserver>(null);
   const config = useStorage(configStorage);
+  const { speed } = useStorage(styleStorage);
   const videoId = config.videoId;
+
+  useEffect(() => {
+    if (d.current) {
+      d.current.speed = speed;
+    }
+  }, [speed]);
 
   const initLiveChats = useCallback(() => {
     try {
@@ -76,7 +84,7 @@ export default function App() {
       const comment = {
         text,
         style: {
-          ...danmakuStyle,
+          ...getDanmakuStyle(),
           color: pickRandomColor(),
         },
       };

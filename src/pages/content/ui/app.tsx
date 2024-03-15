@@ -7,6 +7,9 @@ import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
 import { checkIsLive, createDanmakuStage, danmakuStyle, delay, queryLiveChats, renderHtml } from './utils';
 import { DComment } from './types';
+import { createRoot } from 'react-dom/client';
+import ControlPannel from './ControlPannel';
+import { injectControl } from './injectControl';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
@@ -99,6 +102,9 @@ export default function App() {
       if (isLive) {
         initLiveChats();
       }
+      injectControl(() => {
+        createRoot(document.getElementById('ytb-danmaku-config')).render(<ControlPannel />);
+      });
     },
     [clearTimers, initComments, initLiveChats],
   );
@@ -124,7 +130,8 @@ export default function App() {
 
   return (
     <div>
-      <SendDashboard onAdd={addDanmaku} />;
+      <SendDashboard onAdd={addDanmaku} />
+      <ControlPannel />
     </div>
   );
 }

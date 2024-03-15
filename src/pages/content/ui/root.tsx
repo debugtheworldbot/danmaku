@@ -2,7 +2,6 @@ import { createRoot } from 'react-dom/client';
 import App from '@pages/content/ui/app';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import injectedStyle from './injected.css?inline';
-
 import { attachTwindStyle } from '@src/shared/style/twind';
 
 refreshOnUpdate('pages/content');

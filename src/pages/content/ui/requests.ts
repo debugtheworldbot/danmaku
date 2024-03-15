@@ -1,5 +1,5 @@
 import configStorage from '@root/src/shared/storages/configStorage';
-import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStarage';
+import danmakuStorage, { YT_Response } from '@root/src/shared/storages/danmakuStorage';
 import { host } from '@root/src/utils/consts';
 
 const getId = (id?: string) => {

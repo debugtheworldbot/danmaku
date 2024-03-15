@@ -1,5 +1,5 @@
 import configStorage from '@root/src/shared/storages/configStorage';
-import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
+import danmakuStorage from '@root/src/shared/storages/danmakuStorage';
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { DComment } from './types';

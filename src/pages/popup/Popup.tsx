@@ -2,7 +2,7 @@ import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
 import { useEffect, useCallback } from 'react';
 import useStorage from '@root/src/shared/hooks/useStorage';
-import danmakuStorage from '@root/src/shared/storages/danmakuStarage';
+import danmakuStorage from '@root/src/shared/storages/danmakuStorage';
 import configStorage from '@root/src/shared/storages/configStorage';
 import { getComments } from '../content/ui/requests';
 import { formatTime } from '@root/src/utils/helpers';

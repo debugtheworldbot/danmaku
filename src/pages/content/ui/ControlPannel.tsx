@@ -4,39 +4,57 @@ import styleStorage, { defaultSpeed } from '@root/src/shared/storages/styleStora
 import useStorage from '@root/src/shared/hooks/useStorage';
 
 export default function ControlPannel() {
-  const [showPanel, setShowPanel] = useState(true);
+  const [showPanel, setShowPanel] = useState(false);
   const style = useStorage(styleStorage);
   return (
-    <div className="absolute left-20 top-60" onMouseLeave={() => setShowPanel(false)}>
+    <div className="relative h-full">
+      <button
+        onClick={() => setShowPanel(false)}
+        className={clsx(showPanel ? 'fixed absolute inset-0 cursor-auto' : 'hidden pointer-events-none')}
+      />
       <div
+        style={{
+          background: 'rgba(28,28,28,.9)',
+        }}
         className={clsx(
-          'absolute bottom-full z-10 bg-white rounded block divide-y divide-gray-100 shadow transition-all px-4',
+          'absolute bottom-full z-10 rounded block transition-all p-4 text-white',
           showPanel ? 'opacity-100' : 'opacity-0 hidden pointer-events-none',
         )}>
-        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-          <li className="flex gap-4">
-            <span>font size</span>
-            <button
-              onClick={() => {
-                styleStorage.updateStyle({ fontSize: '20px' });
-              }}
-              className={clsx('border border-gray-300', style.style.fontSize === '20px' && 'bg-gray-300')}>
-              sm
-            </button>
-            <button
-              onClick={() => {
-                styleStorage.updateStyle({ fontSize: '25px' });
-              }}
-              className={clsx('border border-gray-300', style.style.fontSize === '25px' && 'bg-gray-300')}>
-              md
-            </button>
-            <button
-              onClick={() => {
-                styleStorage.updateStyle({ fontSize: '30px' });
-              }}
-              className={clsx('border border-gray-300', style.style.fontSize === '30px' && 'bg-gray-300')}>
-              lg
-            </button>
+        <ul className="py-2 text-2xl flex flex-col gap-4">
+          <li className="flex gap-12">
+            <span>size</span>
+            <div className="flex gap-4 font-mono">
+              <button
+                onClick={() => {
+                  styleStorage.updateStyle({ fontSize: '20px' });
+                }}
+                className={clsx(
+                  'border border-gray-300 rounded-xl px-2',
+                  style.style.fontSize === '20px' && 'bg-red-500',
+                )}>
+                sm
+              </button>
+              <button
+                onClick={() => {
+                  styleStorage.updateStyle({ fontSize: '25px' });
+                }}
+                className={clsx(
+                  'border border-gray-300 rounded-xl px-2',
+                  style.style.fontSize === '25px' && 'bg-red-500',
+                )}>
+                md
+              </button>
+              <button
+                onClick={() => {
+                  styleStorage.updateStyle({ fontSize: '30px' });
+                }}
+                className={clsx(
+                  'border border-gray-300 rounded-xl px-2',
+                  style.style.fontSize === '30px' && 'bg-red-500',
+                )}>
+                lg
+              </button>
+            </div>
           </li>
           <li>
             <SpeedControl />
@@ -45,14 +63,15 @@ export default function ControlPannel() {
             <OpacityControl />
           </li>
         </ul>
-        {JSON.stringify(styleStorage.getSnapshot())}
       </div>
-      <button
-        onClick={() => setShowPanel(!showPanel)}
-        className="rounded-full bg-red-200 text-white font-medium border border-white w-6 h-6"
-        type="button">
-        弹
-      </button>
+      <div className="h-full flex items-center ml-6">
+        <button
+          onClick={() => setShowPanel(!showPanel)}
+          className="rounded-full bg-red-200 text-white font-medium border border-white w-[28px] h-[28px] text-[16px]"
+          type="button">
+          弹
+        </button>
+      </div>
     </div>
   );
 }
@@ -73,7 +92,7 @@ const SpeedControl = () => {
         }}
         className="h-1 bg-gray-200 cursor-pointer w-40 accent-red-500"
       />
-      <span className="w-4">{value}</span>
+      <span className="w-8">{value}</span>
     </div>
   );
 };
@@ -93,7 +112,7 @@ const OpacityControl = () => {
         }}
         className="h-1 bg-gray-200 cursor-pointer w-40 accent-red-500"
       />
-      <span className="w-4">{value}</span>
+      <span className="w-8">{value}</span>
     </div>
   );
 };

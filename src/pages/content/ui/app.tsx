@@ -9,6 +9,7 @@ import { checkIsLive, createDanmakuStage, delay, getDanmakuStyle, queryLiveChats
 import { DComment } from './types';
 import { injectControl } from './injectControl';
 import styleStorage from '@root/src/shared/storages/styleStorage';
+import ControlPannel from './ControlPannel';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
@@ -135,6 +136,7 @@ export default function App() {
   return (
     <div>
       <SendDashboard onAdd={addDanmaku} />
+      <ControlPannel />
     </div>
   );
 }

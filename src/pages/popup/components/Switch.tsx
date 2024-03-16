@@ -1,18 +1,25 @@
-export const Switch = (props: { isLive: boolean; checked: boolean; onChange: (value: boolean) => void }) => {
+import useStorage from '@root/src/shared/hooks/useStorage';
+import configStorage from '@root/src/shared/storages/configStorage';
+
+export const Switch = () => {
+  const config = useStorage(configStorage);
+
   return (
     <div className="flex items-center py-2 border-b-1 min-w-[300px]">
       <label
         onChange={() => {
-          const res = !props.checked;
-          props.onChange(res);
+          const res = !config.enabled;
+          configStorage.update({
+            enabled: res,
+          });
         }}
         className="inline-flex cursor-pointer items-center text-2xl font-medium">
-        <input type="checkbox" checked={props.checked} className="peer sr-only" />
+        <input type="checkbox" checked={config.enabled} className="peer sr-only" />
         <div className="flex-shrink-0 bg-gray-200 peer relative h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full" />
       </label>
       <div className="flex-1 flex items-center">
         <Logo />
-        {props.isLive && <Ping />}
+        {config.isLive && <Ping />}
       </div>
       <Options />
     </div>

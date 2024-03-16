@@ -2,10 +2,12 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import styleStorage, { defaultSpeed } from '@root/src/shared/storages/styleStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
+import configStorage from '@root/src/shared/storages/configStorage';
 
 export default function ControlPannel() {
   const [showPanel, setShowPanel] = useState(false);
   const style = useStorage(styleStorage);
+  const config = useStorage(configStorage);
   return (
     <div className="relative h-full">
       <button
@@ -66,8 +68,17 @@ export default function ControlPannel() {
       </div>
       <div className="h-full flex items-center ml-6">
         <button
-          onClick={() => setShowPanel(!showPanel)}
+          onClick={() => {
+            configStorage.update({ enabled: !config.enabled });
+          }}
           className="rounded-full bg-red-200 text-white font-medium border border-white w-[28px] h-[28px] text-[16px]"
+          type="button">
+          {config.enabled ? 'on' : 'off'}
+        </button>
+        <button
+          disabled={!config.enabled}
+          onClick={() => setShowPanel(!showPanel)}
+          className="rounded-full disabled:cursor-not-allowed disabled:opacity-50 bg-red-200 text-white font-medium border border-white w-[28px] h-[28px] text-[16px]"
           type="button">
           弹
         </button>

@@ -48,11 +48,7 @@ const Popup = () => {
     );
   return (
     <div className="text-center relative pb-2 px-4">
-      <Switch
-        isLive={config.isLive}
-        checked={config.enabled}
-        onChange={value => configStorage.update({ enabled: value })}
-      />
+      <Switch />
       {config.videoId ? (
         <main className="mt-2 relative">
           <button className="absolute right-2 mt-2 text-gray-500" onClick={updateList}>

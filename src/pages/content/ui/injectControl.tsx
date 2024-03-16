@@ -3,11 +3,14 @@ import { attachTwindStyle } from '@src/shared/style/twind';
 import ControlPannel from './ControlPannel';
 
 const ytControlClass = 'ytd-watch-flexy .ytp-left-controls';
+const testClass = '.player';
+const injectDom = () => {
+  const isDev = false;
+  return isDev ? document.querySelector(testClass) : document.querySelector(ytControlClass);
+};
 function injectControl() {
   try {
-    console.trace('ytb-danmaku-inited');
-
-    document.querySelector(ytControlClass)?.setAttribute('style', 'overflow: unset;');
+    injectDom()?.setAttribute('style', 'overflow: unset;');
 
     buildControls();
   } catch (e) {
@@ -19,12 +22,12 @@ function injectControl() {
 }
 
 function buildControls() {
-  if (!document.querySelector(ytControlClass)) throw new Error('no class');
+  if (!injectDom()) throw new Error('no class');
   if (document.getElementById('ytb-danmaku-config')) return console.log('already injected');
   const root = document.createElement('div');
   root.id = 'ytb-danmaku-config';
 
-  document.querySelector(ytControlClass)?.append(root);
+  injectDom().append(root);
 
   console.log('inject control', root);
   const rootIntoShadow = document.createElement('div');

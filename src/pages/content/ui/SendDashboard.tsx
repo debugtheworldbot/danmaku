@@ -2,11 +2,12 @@ import useStorage from '@root/src/shared/hooks/useStorage';
 import configStorage from '@root/src/shared/storages/configStorage';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { Rnd } from 'react-rnd';
+import ControlPannel from './ControlPannel';
 
 export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   const config = useStorage(configStorage);
   const { onAdd } = props;
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [text, setText] = useState('');
   const focusing = useRef(false);
   const inputRef = useRef(null);
@@ -121,7 +122,8 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
               setText(e.target.value);
             }}
           />
-          <button className="bg-gray-300 rounded-full px-4 py-2" type="submit">
+          <ControlPannel />
+          <button className="bg-gray-300 rounded-full px-4 h-10" type="submit">
             Send
           </button>
         </form>

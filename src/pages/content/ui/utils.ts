@@ -5,6 +5,7 @@ import Danmaku from 'danmaku';
 import { DComment } from './types';
 import styleStorage from '@root/src/shared/storages/styleStorage';
 
+export const isDev = false;
 export const createDanmakuStage = (comments: DComment[]) => {
   const video = document.getElementsByTagName('video')[0];
   const container = video.parentNode as HTMLElement;

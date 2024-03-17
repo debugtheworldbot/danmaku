@@ -1,14 +1,15 @@
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { checkIsLive, createDanmakuStage, delay, getDanmakuStyle, queryLiveChats, renderHtml } from './utils';
+import { checkIsLive, createDanmakuStage, delay, getDanmakuStyle, isDev, queryLiveChats, renderHtml } from './utils';
 import { DComment } from './types';
 import { injectControl } from './injectControl';
 import styleStorage from '@root/src/shared/storages/styleStorage';
+import { OpenBtn } from './OpenBtn';
 
 let livePollTimer: NodeJS.Timeout;
 const liveDelayTimer: NodeJS.Timeout[] = [];
@@ -108,7 +109,7 @@ export default function App() {
       if (isLive) {
         initLiveChats();
       }
-      injectControl();
+      injectControl(<OpenBtn onClick={() => setVisible(v => !v)} />);
     },
     [clearTimers, initComments, initLiveChats],
   );
@@ -124,6 +125,9 @@ export default function App() {
   );
 
   useEffect(() => {
+    if (isDev) {
+      injectControl(<OpenBtn onClick={() => setVisible(v => !v)} />);
+    }
     if (videoId && config.enabled) {
       init(videoId);
       return;
@@ -132,9 +136,10 @@ export default function App() {
     clearTimers();
   }, [clearTimers, config.enabled, init, videoId]);
 
+  const [visible, setVisible] = useState(false);
   return (
     <div>
-      <SendDashboard onAdd={addDanmaku} />
+      <SendDashboard visible={visible} setVisible={setVisible} onAdd={addDanmaku} />
     </div>
   );
 }

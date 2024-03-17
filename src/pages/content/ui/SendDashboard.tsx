@@ -3,12 +3,15 @@ import configStorage from '@root/src/shared/storages/configStorage';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import ControlPannel from './ControlPannel';
+import { isDev } from './utils';
 
-const isDev = true;
-export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
+export const SendDashboard = (props: {
+  onAdd: (text: string) => void;
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+}) => {
+  const { visible, setVisible, onAdd } = props;
   const config = useStorage(configStorage);
-  const { onAdd } = props;
-  const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
   const focusing = useRef(false);
   const inputRef = useRef(null);
@@ -17,7 +20,13 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     setVisible(false);
     focusing.current = false;
     setText('');
-  }, []);
+  }, [setVisible]);
+
+  useEffect(() => {
+    if (visible) {
+      inputRef.current.focus();
+    }
+  }, [visible]);
 
   useEffect(() => {
     const focusin = () => {
@@ -68,11 +77,11 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     return () => {
       window.removeEventListener('keydown', trackKey);
     };
-  }, [closePopup, config.isLive]);
+  }, [closePopup, config.isLive, setVisible]);
 
   return (
     <div
-      className="fixed top-[80%] z-[9999] flex text-xl gap-4 w-full flex transition-all"
+      className="fixed top-[70%] z-[9999] flex text-xl gap-4 w-full flex transition-all"
       style={{
         opacity: visible ? '1' : '0',
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(20%) scale(0.95)',
@@ -80,8 +89,9 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
       }}>
       <Rnd
         className="border rounded-full"
+        enableResizing={false}
         default={{
-          x: 0,
+          x: 200,
           y: 0,
           width: 'fit-content',
           height: 'fit-content',
@@ -102,8 +112,6 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
             <Close />
           </button>
           <input
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus={visible}
             ref={inputRef}
             onKeyDown={e => {
               e.stopPropagation();

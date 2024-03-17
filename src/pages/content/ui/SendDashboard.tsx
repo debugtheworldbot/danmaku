@@ -79,6 +79,12 @@ export const SendDashboard = (props: {
     };
   }, [closePopup, config.isLive, setVisible]);
 
+  const [disableDragging, setDisableDragging] = useState(true);
+
+  const onControlPannelVisibleChange = useCallback((visible: boolean) => {
+    setDisableDragging(visible);
+  }, []);
+
   return (
     <div
       className="fixed top-[75%] z-[9999] text-xl gap-4 w-full transition-all"
@@ -90,6 +96,7 @@ export const SendDashboard = (props: {
       <Rnd
         className="border rounded-full"
         enableResizing={false}
+        disableDragging={disableDragging}
         default={{
           x: window.screen.width * 0.3,
           y: 0,
@@ -131,7 +138,7 @@ export const SendDashboard = (props: {
               setText(e.target.value);
             }}
           />
-          <ControlPannel />
+          <ControlPannel onVisibleChange={onControlPannelVisibleChange} />
           <button className="bg-gray-300 rounded-full px-4 h-10" type="submit">
             Send
           </button>

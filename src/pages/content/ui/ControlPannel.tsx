@@ -3,58 +3,23 @@ import clsx from 'clsx';
 import styleStorage, { defaultSpeed } from '@root/src/shared/storages/styleStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 
-export default function ControlPannel() {
-  const [showPanel, setShowPanel] = useState(false);
-  const style = useStorage(styleStorage);
+export default function ControlPannel(props: { onVisibleChange: (visible: boolean) => void }) {
+  const { onVisibleChange } = props;
+  const [showPanel, setShowPanel] = useState(true);
   return (
-    <div className="relative h-full">
+    <div className="relative">
       <button
         onClick={() => setShowPanel(false)}
         className={clsx(showPanel ? 'fixed absolute inset-0 cursor-auto' : 'hidden pointer-events-none')}
       />
       <div
-        style={{
-          background: 'rgba(28,28,28,.9)',
-        }}
         className={clsx(
-          'absolute bottom-full rounded block transition-all p-4 text-white',
+          'absolute bottom-full mb-6 bg-gray-500/70 rounded-2xl block transition-all p-4 text-white',
           showPanel ? 'opacity-100' : 'opacity-0 pointer-events-none',
         )}>
-        <ul className="py-2 text-2xl flex flex-col gap-4">
-          <li className="flex gap-12">
-            <span>size</span>
-            <div className="flex gap-4 font-mono">
-              <button
-                onClick={() => {
-                  styleStorage.updateStyle({ fontSize: '20px' });
-                }}
-                className={clsx(
-                  'border border-gray-300 rounded-xl px-2',
-                  style.style.fontSize === '20px' && 'bg-red-500',
-                )}>
-                sm
-              </button>
-              <button
-                onClick={() => {
-                  styleStorage.updateStyle({ fontSize: '25px' });
-                }}
-                className={clsx(
-                  'border border-gray-300 rounded-xl px-2',
-                  style.style.fontSize === '25px' && 'bg-red-500',
-                )}>
-                md
-              </button>
-              <button
-                onClick={() => {
-                  styleStorage.updateStyle({ fontSize: '30px' });
-                }}
-                className={clsx(
-                  'border border-gray-300 rounded-xl px-2',
-                  style.style.fontSize === '30px' && 'bg-red-500',
-                )}>
-                lg
-              </button>
-            </div>
+        <ul className="py-2 text-xl flex flex-col gap-4">
+          <li>
+            <SizeControl />
           </li>
           <li>
             <SpeedControl />
@@ -66,8 +31,11 @@ export default function ControlPannel() {
       </div>
       <div className="h-full flex items-center">
         <button
-          onClick={() => setShowPanel(!showPanel)}
-          className="rounded-full disabled:cursor-not-allowed disabled:opacity-50 bg-gray-300 rounded-full p-2 w-10 h-10"
+          onClick={() => {
+            setShowPanel(!showPanel);
+            onVisibleChange(!showPanel);
+          }}
+          className="rounded-full bg-gray-300 rounded-full p-2 w-10 h-10 focus:outline focus:outline-white cursor-pointer"
           type="button">
           <Setting />
         </button>
@@ -76,12 +44,39 @@ export default function ControlPannel() {
   );
 }
 
+const SizeControl = () => {
+  const style = useStorage(styleStorage);
+  const [value, setValue] = useState(parseInt(style.style.fontSize.replace('px', '')));
+  return (
+    <div className="flex items-center gap-4">
+      <span className="w-20 text-center">Size</span>
+      <div className="flex items-center relative">
+        <span className="text-sm absolute -left-4">A</span>
+
+        <input
+          type="range"
+          min={15}
+          max={35}
+          step={5}
+          value={value}
+          onChange={e => {
+            const v = Math.floor(Number(e.target.value));
+            setValue(v);
+            styleStorage.updateStyle({ fontSize: `${v}px` });
+          }}
+          className="w-40 h-2 bg-gray-300 rounded-lg opacity-90 hover:opacity-100 appearance-none cursor-pointer slider"
+        />
+      </div>
+      <span className="text-2xl">A</span>
+    </div>
+  );
+};
 const SpeedControl = () => {
   const style = useStorage(styleStorage);
   const [value, setValue] = useState(Math.floor((style.speed / defaultSpeed) * 50));
   return (
     <div className="flex items-center gap-4">
-      <span className="flex-1">speed</span>
+      <span className="w-20 text-center">Speed</span>
       <input
         type="range"
         value={value}
@@ -90,9 +85,9 @@ const SpeedControl = () => {
           setValue(v);
           styleStorage.updateSpeed((v * defaultSpeed) / 50);
         }}
-        className="h-1 bg-gray-200 cursor-pointer w-40 accent-red-500"
+        className="w-40 h-2 bg-gray-300 rounded-lg opacity-90 hover:opacity-100 appearance-none cursor-pointer slider"
       />
-      <span className="w-8">{value}</span>
+      <span className="w-8 text-base">{value}</span>
     </div>
   );
 };
@@ -101,7 +96,7 @@ const OpacityControl = () => {
   const [value, setValue] = useState(parseFloat(style.style.opacity) * 100);
   return (
     <div className="flex items-center gap-4">
-      <span className="flex-1">opacity</span>
+      <span className="w-20 text-center">Opacity</span>
       <input
         type="range"
         value={value}
@@ -110,9 +105,9 @@ const OpacityControl = () => {
           setValue(v);
           styleStorage.updateStyle({ opacity: String(v / 100) });
         }}
-        className="h-1 bg-gray-200 cursor-pointer w-40 accent-red-500"
+        className="w-40 h-2 bg-gray-300 rounded-lg opacity-90 hover:opacity-100 appearance-none cursor-pointer slider"
       />
-      <span className="w-8">{value}</span>
+      <span className="w-8 text-base">{value}</span>
     </div>
   );
 };

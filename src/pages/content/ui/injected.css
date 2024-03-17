@@ -3,7 +3,7 @@
   appearance: none;
   width: 1.5rem;
   height: 1.5rem;
-  background: rgb(239, 68, 68);
+  background: #ff6666;
   cursor: pointer;
   border-radius: 100%;
 }

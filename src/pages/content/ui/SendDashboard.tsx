@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import ControlPannel from './ControlPannel';
 import { isDev } from './utils';
+import clsx from 'clsx';
 
 export const SendDashboard = (props: {
   onAdd: (text: string) => void;
@@ -13,6 +14,7 @@ export const SendDashboard = (props: {
   const { visible, setVisible, onAdd } = props;
   const config = useStorage(configStorage);
   const [text, setText] = useState('');
+  const [panelVisible, setPanelVisible] = useState(false);
   const focusing = useRef(false);
   const inputRef = useRef(null);
 
@@ -79,12 +81,6 @@ export const SendDashboard = (props: {
     };
   }, [closePopup, config.isLive, setVisible]);
 
-  const [disableDragging, setDisableDragging] = useState(true);
-
-  const onControlPannelVisibleChange = useCallback((visible: boolean) => {
-    setDisableDragging(visible);
-  }, []);
-
   return (
     <div
       className="fixed top-[75%] z-[9999] text-xl gap-4 w-full transition-all"
@@ -96,7 +92,7 @@ export const SendDashboard = (props: {
       <Rnd
         className="border rounded-full"
         enableResizing={false}
-        disableDragging={disableDragging}
+        disableDragging={panelVisible}
         default={{
           x: window.screen.width * 0.3,
           y: 0,
@@ -132,13 +128,21 @@ export const SendDashboard = (props: {
             onKeyUpCapture={e => {
               e.stopPropagation();
             }}
-            className="rounded-full flex-1 px-4 py-2 bg-gray-600/30 text-white outline-none border border-transparent focus:border-white"
+            className="rounded-full flex-1 px-4 py-2 bg-black/20 text-white outline-none border border-transparent focus:border-white"
             value={text}
             onChange={e => {
               setText(e.target.value);
             }}
           />
-          <ControlPannel onVisibleChange={onControlPannelVisibleChange} />
+          <button
+            onClick={() => setPanelVisible(false)}
+            className={clsx(
+              panelVisible
+                ? 'fixed absolute -top-[75vh] -left-[30vw] w-screen h-screen cursor-auto'
+                : 'hidden pointer-events-none',
+            )}
+          />
+          <ControlPannel visible={panelVisible} setVisible={setPanelVisible} />
           <button className="bg-gray-300 rounded-full px-4 h-10" type="submit">
             Send
           </button>

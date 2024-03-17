@@ -1,6 +1,6 @@
 export const OpenBtn = (props: { onClick: () => void }) => {
   return (
-    <div className="h-full flex items-center">
+    <div className="h-full flex items-center ml-4">
       <button onClick={props.onClick} className="rounded-full rounded-full w-12 h-12 p-2" type="button">
         <Icon />
       </button>

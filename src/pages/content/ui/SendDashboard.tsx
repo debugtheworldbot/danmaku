@@ -81,7 +81,7 @@ export const SendDashboard = (props: {
 
   return (
     <div
-      className="fixed top-[70%] z-[9999] flex text-xl gap-4 w-full flex transition-all"
+      className="fixed top-[75%] z-[9999] text-xl gap-4 w-full transition-all"
       style={{
         opacity: visible ? '1' : '0',
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(20%) scale(0.95)',
@@ -91,7 +91,7 @@ export const SendDashboard = (props: {
         className="border rounded-full"
         enableResizing={false}
         default={{
-          x: 200,
+          x: window.screen.width * 0.3,
           y: 0,
           width: 'fit-content',
           height: 'fit-content',
@@ -104,7 +104,7 @@ export const SendDashboard = (props: {
             onAdd(text);
             closePopup();
           }}
-          className="bg-gray-500/70 dark:bg-gray-500/50 shadow-xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[60vw] border border-gray-300 border-1 border-solid outline outline-black/50">
+          className="bg-gray-500/70 dark:bg-gray-500/50 shadow-xl mx-auto backdrop-blur flex items-center gap-4 p-4 rounded-full w-[40vw] border border-gray-300 border-1 border-solid outline outline-black/50">
           <button
             className="flex p-1 items-center bg-gray-300 rounded-full w-10 h-10"
             type="button"

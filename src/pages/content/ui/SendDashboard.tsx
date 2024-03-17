@@ -4,10 +4,11 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import ControlPannel from './ControlPannel';
 
+const isDev = true;
 export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
   const config = useStorage(configStorage);
   const { onAdd } = props;
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
   const focusing = useRef(false);
   const inputRef = useRef(null);
@@ -52,7 +53,7 @@ export const SendDashboard = (props: { onAdd: (text: string) => void }) => {
     const trackKey = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         if (focusing.current) return console.log('ffffffocusing');
-        if (window.location.pathname !== '/watch') return console.log('not a watch page');
+        if (window.location.pathname !== '/watch' && !isDev) return console.log('not a watch page');
         if (config.isLive) return console.log('live mode');
         inputRef.current.focus();
         setVisible(true);

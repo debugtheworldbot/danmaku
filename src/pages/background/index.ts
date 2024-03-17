@@ -20,7 +20,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 chrome.runtime.onInstalled.addListener(object => {
-  const externalUrl = 'https://www.danmucat.com';
+  const externalUrl = 'https://danmucat.com';
 
   if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.tabs.create({ url: externalUrl }, () => {

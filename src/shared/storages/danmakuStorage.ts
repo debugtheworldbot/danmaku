@@ -3,6 +3,7 @@ import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/ba
 export type YT_Response = {
   time?: number;
   text: string;
+  displayText?: string;
 }[];
 
 type DanmakuStorage = BaseStorage<YT_Response> & {

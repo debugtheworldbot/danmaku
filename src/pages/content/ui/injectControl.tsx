@@ -36,7 +36,6 @@ function injectControl(el: ReactNode) {
     attachTwindStyle(rootIntoShadow, shadowRoot);
     createRoot(rootIntoShadow).render(el);
   } catch (e) {
-    console.error(e);
     setTimeout(() => {
       injectControl(el);
     }, 1000);

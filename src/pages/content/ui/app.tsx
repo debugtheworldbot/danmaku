@@ -5,10 +5,10 @@ import { getComments, addComments } from './requests';
 import configStorage from '@root/src/shared/storages/configStorage';
 import useStorage from '@root/src/shared/hooks/useStorage';
 import { SendDashboard } from './SendDashboard';
-import { checkIsLive, createDanmakuStage, delay, getDanmakuStyle, isDev, queryLiveChats, renderHtml } from './utils';
+import { checkIsLive, createDanmakuStage, delay, isDev, queryLiveChats, renderHtml } from './utils';
 import { DComment } from './types';
 import { injectControl } from './injectControl';
-import styleStorage from '@root/src/shared/storages/styleStorage';
+import styleStorage, { danmakuStyle } from '@root/src/shared/storages/styleStorage';
 import { OpenBtn } from './OpenBtn';
 
 let livePollTimer: NodeJS.Timeout;
@@ -83,7 +83,7 @@ export default function App() {
       const comment = {
         text,
         style: {
-          ...getDanmakuStyle(),
+          ...danmakuStyle,
           color: pickRandomColor(),
         },
       };

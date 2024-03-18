@@ -3,7 +3,7 @@ import danmakuStorage from '@root/src/shared/storages/danmakuStorage';
 import { pickRandomColor } from '@root/src/utils/consts';
 import Danmaku from 'danmaku';
 import { DComment } from './types';
-import styleStorage from '@root/src/shared/storages/styleStorage';
+import { danmakuStyle } from '@root/src/shared/storages/styleStorage';
 
 export const isDev = false;
 export const createDanmakuStage = (comments: DComment[]) => {
@@ -35,10 +35,8 @@ export const renderHtml = (text: string) => {
   return toNodes(`<div style='${styleString()};color:${pickRandomColor()}'>${text}</div>`);
 };
 
-export const getDanmakuStyle = () => styleStorage.getSnapshot().style;
-
 const styleString = () =>
-  Object.entries(getDanmakuStyle())
+  Object.entries(danmakuStyle)
     .map(([k, v]) => `${k.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${v}`)
     .join(';');
 
@@ -68,7 +66,7 @@ export const queryLiveChats = () => {
       return {
         text,
         style: {
-          ...getDanmakuStyle(),
+          ...danmakuStyle,
           color: pickRandomColor(),
         },
       };

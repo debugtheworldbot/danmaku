@@ -1,6 +1,6 @@
 import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/base';
 
-const danmakuStyle = {
+export const danmakuStyle = {
   fontSize: '25px',
   textShadow: '1px 0 1px #000000,0 1px 1px #000000,0 -1px 1px #000000,-1px 0 1px #000000',
   opacity: '0.8',
@@ -39,6 +39,8 @@ const styleStorage: StyleStorage = {
     });
   },
   updateStyle: async style => {
+    danmakuStyle.opacity = style.opacity || danmakuStyle.opacity;
+    danmakuStyle.fontSize = style.fontSize || danmakuStyle.fontSize;
     await storage.set({
       speed: storage.getSnapshot().speed,
       style: {
@@ -48,5 +50,11 @@ const styleStorage: StyleStorage = {
     });
   },
 };
+
+styleStorage.get().then(res => {
+  const style = res.style;
+  danmakuStyle.opacity = style.opacity || danmakuStyle.opacity;
+  danmakuStyle.fontSize = style.fontSize || danmakuStyle.fontSize;
+});
 
 export default styleStorage;

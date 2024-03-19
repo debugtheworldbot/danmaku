@@ -10,7 +10,7 @@ export const createDanmakuStage = (comments: DComment[]) => {
   const video = document.getElementsByTagName('video')[0];
   const container = video.parentNode as HTMLElement;
   container.style.height = '100%';
-  console.log('damnaku loaded', video);
+  console.log('danmaku loaded', video);
   const danmaku = new Danmaku({
     // 必填。用于显示弹幕的「舞台」会被添加到该容器中。
     container,

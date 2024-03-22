@@ -4,7 +4,7 @@
     "message": "Display YouTube video comments with time tag and live chat messages as danmaku! Also support send danmaku."
   },
   "extensionName": {
-    "description": "Extension name",
-    "message": "DanmuCat - Display YouTube video comments and live messages as danmaku(弹幕)!"
+    "description": "DanmuCat",
+    "message": "DanmuCat - Show YouTube video comments and live messages as danmaku!"
   }
 }

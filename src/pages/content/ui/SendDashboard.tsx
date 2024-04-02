@@ -1,5 +1,3 @@
-import useStorage from '@root/src/shared/hooks/useStorage';
-import configStorage from '@root/src/shared/storages/configStorage';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import ControlPannel from './ControlPannel';
@@ -12,7 +10,6 @@ export const SendDashboard = (props: {
   setVisible: (visible: boolean) => void;
 }) => {
   const { visible, setVisible, onAdd } = props;
-  const config = useStorage(configStorage);
   const [text, setText] = useState('');
   const [panelVisible, setPanelVisible] = useState(false);
   const focusing = useRef(false);
@@ -65,7 +62,6 @@ export const SendDashboard = (props: {
       if (e.key === 'Enter') {
         if (focusing.current) return console.log('ffffffocusing');
         if (window.location.pathname !== '/watch' && !isDev) return console.log('not a watch page');
-        if (config.isLive) return console.log('live mode');
         inputRef.current.focus();
         setVisible(true);
         e.stopImmediatePropagation();
@@ -79,7 +75,7 @@ export const SendDashboard = (props: {
     return () => {
       window.removeEventListener('keydown', trackKey);
     };
-  }, [closePopup, config.isLive, setVisible]);
+  }, [closePopup, setVisible]);
 
   return (
     <div

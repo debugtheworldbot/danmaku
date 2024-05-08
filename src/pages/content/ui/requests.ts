@@ -18,7 +18,10 @@ const getOrCreateClientId = async () => {
   let clientId = result.clientId;
   if (!clientId) {
     // Generate a unique client ID, the actual value is not relevant
-    clientId = self.crypto.randomUUID();
+    const res = await fetch(`${host}/youtube/token`, {
+      method: 'GET',
+    }).then(res => res.json());
+    clientId = res.data;
     await chrome.storage.local.set({ clientId });
   }
   return clientId;
@@ -41,8 +44,12 @@ export const addComments = async (id: string, text: string, time: number) => {
 export const getComments = async (id?: string) => {
   const finalId = getId(id);
   configStorage.update({ loading: true });
+  const clientId = await getOrCreateClientId();
   const res = await fetch(`${host}/youtube/api?id=${finalId}`, {
     method: 'GET',
+    headers: {
+      Authorization: clientId,
+    },
   }).then(res => res.json());
   console.log('danmakus', res.data);
   configStorage.update({ loading: false });

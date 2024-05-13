@@ -30,7 +30,7 @@
     "clsx": "^2.1.0",
     "construct-style-sheets-polyfill": "3.1.0",
     "danmaku": "^2.0.6",
-    "react": "18.2.0",
+    "react": "18.3.1",
     "react-dom": "18.2.0",
     "react-rnd": "^10.4.1",
     "webextension-polyfill": "0.10.0"
@@ -46,7 +46,7 @@
     "@twind/preset-tailwind": "^1.1.4",
     "@types/chrome": "0.0.260",
     "@types/node": "20.11.24",
-    "@types/react": "18.2.64",
+    "@types/react": "18.3.2",
     "@types/react-dom": "18.2.18",
     "@types/ws": "8.5.10",
     "@typescript-eslint/eslint-plugin": "6.10.0",
